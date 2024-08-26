@@ -1,0 +1,26 @@
+@font-face {
+  font-family: "DMSansBlack";
+  src: local("DMSans"), url("@/assets/fonts/DM_Sans/static/DMSans-Black.ttf") format("truetype"),
+}
+
+@font-face {
+  font-family: "DMSansHeavy";
+  src: local("DMSans"), url("@/assets/fonts/DM_Sans/static/DMSans-Bold.ttf") format("truetype"),
+}
+
+@font-face {
+  font-family: "DMSansMedium";
+  src: local("DMSans"), url("@/assets/fonts/DM_Sans/static/DMSans-Medium.ttf") format("truetype"),
+}
+
+* {
+  font-family: "DMSansMedium";
+}
+
+.heavy {
+  font-family: "DMSansHeavy" !important;
+}
+
+.regular {
+  font-family: "DMSansBlack" !important;
+}

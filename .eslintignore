@@ -1,0 +1,8 @@
+# Unlinted files and folders.
+# References at https://eslint.org/docs/user-guide/configuring#eslintignore
+
+# Generated docs, tests coverage, bundles and type definitions.
+coverage/
+docs/
+build/
+node_modules/

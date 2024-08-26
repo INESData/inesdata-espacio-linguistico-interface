@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "name": "Policy test 1",
+    "content": "{}",
+    "creationDate": 1708706061682,
+    "user": 1,
+    "type": "contract"
+  },
+  {
+    "id": 2,
+    "name": "Policy test 2",
+    "content": "{}",
+    "creationDate": 1708706061682,
+    "user": 1,
+    "type": "access"
+  },
+  {
+    "id": 3,
+    "name": "Policy test 3",
+    "content": "{}",
+    "creationDate": 1708706061682,
+    "user": 2,
+    "type": "contract"
+  },
+  {
+    "id": 4,
+    "name": "Policy test 4",
+    "content": "{}",
+    "creationDate": 1708706061682,
+    "user": 2,
+    "type": "access"
+  }
+]

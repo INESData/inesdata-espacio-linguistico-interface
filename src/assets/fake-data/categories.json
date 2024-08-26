@@ -1,0 +1,130 @@
+[
+  {
+    "id": 1,
+    "name": "Arts"
+  },
+  {
+    "id": 2,
+    "name": "Broadcasts"
+  },
+  {
+    "id": 3,
+    "name": "Business"
+  },
+  {
+    "id": 4,
+    "name": "Conflicts"
+  },
+  {
+    "id": 5,
+    "name": "Crime"
+  },
+  {
+    "id": 6,
+    "name": "Culture"
+  },
+  {
+    "id": 7,
+    "name": "Disasters"
+  },
+  {
+    "id": 8,
+    "name": "Economy"
+  },
+  {
+    "id": 9,
+    "name": "Education"
+  },
+  {
+    "id": 10,
+    "name": "Entertainment"
+  },
+  {
+    "id": 11,
+    "name": "Environment"
+  },
+  {
+    "id": 12,
+    "name": "Finance"
+  },
+  {
+    "id": 13,
+    "name": "Health"
+  },
+  {
+    "id": 14,
+    "name": "Human interest"
+  },
+  {
+    "id": 15,
+    "name": "Labour"
+  },
+  {
+    "id": 16,
+    "name": "Law"
+  },
+  {
+    "id":17,
+    "name": "Lifestyle and leisure"
+  },
+  {
+    "id": 18,
+    "name": "Literature"
+  },
+  {
+    "id": 19,
+    "name": "Machine Translation"
+  },
+  {
+    "id": 20,
+    "name": "NER"
+  },
+  {
+    "id": 21,
+    "name": "News"
+  },
+  {
+    "id": 22,
+    "name": "NLP"
+  },
+  {
+    "id": 23,
+    "name": "Politics"
+  },
+  {
+    "id": 24,
+    "name": "Religion"
+  },
+  {
+    "id": 25,
+    "name": "Science"
+  },
+  {
+    "id": 26,
+    "name": "Social media"
+  },
+  {
+    "id":27,
+    "name": "Society"
+  },
+  {
+    "id": 28,
+    "name": "Speech"
+  },
+  {
+    "id": 29,
+    "name": "Sport"
+  },
+  {
+    "id": 30,
+    "name": "Technology"
+  },
+  {
+    "id": 31,
+    "name": "Weather"
+  },
+  {
+    "id": 32,
+    "name": "Web crawling"
+  }
+]

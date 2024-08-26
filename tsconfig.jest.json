@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.app.json",
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/**/*d.ts",
+      "tests/**/*.ts",
+      "tests/**/*.tsx"
+    ],
+  "exclude": [
+      "node_modules",
+      "tests/cypress/**/*"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "types": [
+      "jest",
+      "node",
+      "vite/client"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "types": ["node"],
+    "paths": {
+      "@/*": [ "src/*" ],
+      "@services/*": [ "src/services/*" ],
+      "@components/*": [ "src/components/*" ]
+    }
+  },
+  "exclude": ["cypress.config.ts", "jest.config.js"]
+}

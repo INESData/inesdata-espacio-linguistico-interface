@@ -1,0 +1,49 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+node
+nginx
+.DS_Store
+dist
+target
+dev-dist
+dist-ssr
+coverage
+*.local
+
+/tests/cypress/output/
+selenium-debug.log
+chromedriver.log
+geckodriver.log
+npm-audit.log
+
+/cypress/videos/
+/cypress/screenshots/
+
+# Editor directories and files
+.vscode
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# local env files
+.env.local
+.env.*.local
+
+# prod env file
+.env.production
+
+# Jest JUnit tests code coverage
+/coverage/
+junit.xml

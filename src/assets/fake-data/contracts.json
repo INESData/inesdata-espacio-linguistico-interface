@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "Contract test 1",
+    "contractPolicy": 1,
+    "accessPolicy": 2,
+    "creationDate": 1708706061682,
+    "user": 1
+  },
+  {
+    "id": 2,
+    "name": "Contract test 2",
+    "contractPolicy": 3,
+    "accessPolicy": 4,
+    "creationDate": 1708706061682,
+    "user": 2
+  }
+]

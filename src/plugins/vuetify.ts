@@ -1,0 +1,101 @@
+import 'vuetify/styles';
+import { createVuetify } from 'vuetify';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
+import {
+  mdiArrowLeft,
+  mdiContentCopy,
+  mdiAccountCircleOutline,
+  mdiBriefcaseAccountOutline,
+  mdiCogPlayOutline,
+  mdiFolderTextOutline,
+  mdiAccount,
+  mdiAccountOutline,
+  mdiMagnify,
+  mdiClose,
+  mdiCircleMedium,
+  mdiFlagOutline,
+  mdiLicense,
+  mdiLink,
+  mdiShapeOutline,
+  mdiTune,
+  mdiAxisArrow,
+  mdiTextBoxOutline,
+  mdiFileSign,
+  mdiPencil,
+  mdiDelete,
+  mdiEye,
+  mdiFile,
+  mdiMenuDown,
+  mdiAlertCircle,
+  mdiCheckCircle,
+  mdiCloseCircle,
+  mdiMonitorArrowDownVariant,
+  mdiContentPaste,
+} from '@mdi/js';
+
+const customLightTheme = {
+  dark: false,
+  colors: {
+    'background': '#FFFFFF',
+    'surface': '#FFFFFF',
+    'primary': '#6296D0',
+    'primary-darken-1': '#3700B3',
+    'secondary': '#03DAC6',
+    'secondary-darken-1': '#018786',
+    'error': '#B00020',
+    'info': '#2196F3',
+    'success': '#4CAF50',
+    'warning': '#FB8C00',
+  },
+};
+
+export default createVuetify({
+  components,
+  directives,
+  icons: {
+    defaultSet: 'mdi',
+    aliases: {
+      ...aliases,
+      arrowLeft: mdiArrowLeft,
+      contentCopy: mdiContentCopy,
+      accountCircleOutline: mdiAccountCircleOutline,
+      briefcaseAccountOutline: mdiBriefcaseAccountOutline,
+      cogPlayOutline: mdiCogPlayOutline,
+      folderTextOutline: mdiFolderTextOutline,
+      account: mdiAccount,
+      accountOutline: mdiAccountOutline,
+      magnify: mdiMagnify,
+      close: mdiClose,
+      circleMedium: mdiCircleMedium,
+      flag: mdiFlagOutline,
+      license: mdiLicense,
+      link: mdiLink,
+      shapeOutline: mdiShapeOutline,
+      tune: mdiTune,
+      axisArrow: mdiAxisArrow,
+      textBoxOutline: mdiTextBoxOutline,
+      fileSign: mdiFileSign,
+      pencil: mdiPencil,
+      delete: mdiDelete,
+      eye: mdiEye,
+      file: mdiFile,
+      menuDown: mdiMenuDown,
+      alertCircle: mdiAlertCircle,
+      checkCircle: mdiCheckCircle,
+      closeCircle: mdiCloseCircle,
+      monitorArrowDownVariant: mdiMonitorArrowDownVariant,
+      contentPaste: mdiContentPaste,
+    },
+    sets: {
+      mdi,
+    },
+  },
+  theme: {
+    defaultTheme: 'light',
+    themes: {
+      customLightTheme,
+    },
+  },
+});

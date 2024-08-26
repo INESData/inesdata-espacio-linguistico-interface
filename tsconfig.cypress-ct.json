@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.app.json",
+  "include": [
+    "env.d.ts",
+    "src/**/*",
+    "src/**/*.vue",
+    "src/**/*.json",
+    "tests/cypress/support/component.*",
+    "tests/cypress/support/commands.ts",
+    "../../node_modules/cypress",
+  ],
+  "exclude": [],
+  "compilerOptions": {
+    "composite": true,
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "types": ["cypress"]
+  }
+}

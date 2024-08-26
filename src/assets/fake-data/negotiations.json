@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "status": "PENDING",
+    "last_updated": 1708706061682,
+    "assetId": 1,
+    "contractId": 1,
+    "assetOwnerId": 2,
+    "acquirerId": 1,
+    "creationDate": 1708706061682
+  },
+  {
+    "id": 2,
+    "status": "PENDING",
+    "last_updated": 1708706061682,
+    "assetId": 2,
+    "contractId": 2,
+    "assetOwnerId": 1,
+    "acquirerId": 2,
+    "creationDate": 1708706061682
+  }
+]

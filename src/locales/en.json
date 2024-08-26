@@ -1,0 +1,207 @@
+{
+  "commons": {
+    "app-title": "Inesdata Catalog",
+    "corpus": {
+      "corpus": "Corpus",
+      "corpus-s": "Corpus",
+      "corpus-description": "List of all the corpus datasets offered in the in the INESDATA language data space catalogue."
+    },
+    "service": {
+      "service": "Services",
+      "service-s": "Service",
+      "service-description": "List of all the services datasets offered in the in the INESDATA language data space catalogue."
+    },
+    "model": {
+      "model": "Models",
+      "model-s": "Model",
+      "model-description": "List of all the models offered in the in the INESDATA language data space catalogue."
+    },
+    "lexical-resource": {
+      "lexical-resource": "Lexical resources",
+      "lexical-resource-s": "Lexical resources",
+      "lexical-resource-description": "List of all the lexical resources offered in the in the INESDATA language data space catalogue."
+    },
+    "contract": {
+      "contract": "Contracts",
+      "contract-s": "Contract",
+      "contract-description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse posuere ipsum odio, sed maximus dui lobortis sit amet. Vivamus ac condimentum tellus, id tempus urna. Nullam ut pellentesque diam."
+    },
+    "policy": {
+      "policy": "Policies",
+      "policy-s": "Policy",
+      "policy-description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse posuere ipsum odio, sed maximus dui lobortis sit amet. Vivamus ac condimentum tellus, id tempus urna. Nullam ut pellentesque diam.",
+      "contract-policy": "Contract policy",
+      "access-policy": "Access policy"
+    },
+    "account": {
+      "account": "Account"
+    },
+    "console": {
+      "console": "My console",
+      "overview": "Overview",
+      "overview-description": "Here you can create and manage your assets, your policies and contract definitions, and review your contract negotiations and agreements.",
+      "assets": "Assets",
+      "assets-description": "Assets are language resources comprising corpora (annotated or unannotated), lexical resources or pretrained models.",
+      "policies": "Policies",
+      "contracts": "Contracts",
+      "contracts-description": "A Contract Definition specifies the Access Policy on a Data Asset, and the Usage Policy - duties, rules, and obligations one must follow.",
+      "negotiations": "Negotiations",
+      "negotiations-description": "Here you can review all your contract offer negotiations."
+    },
+    "locales": {
+      "language": "Language",
+      "EN": "English",
+      "ES": "Spanish",
+      "IT": "Italian"
+    },
+    "operations": {
+      "unsaved": {
+        "title":
+          "Unsaved changes",
+        "message":
+          "Do you really want to leave this section?"
+      },
+      "delete": {
+        "title": {
+          "single":"Delete"
+        },
+        "message": {
+          "single": "Are you sure you want to delete?"
+        }
+      },
+      "deleted": "Deleted",
+      "created": "Created",
+      "updated": "Updated"
+    },
+    "buttons": {
+      "go-to-catalog": "Catalog",
+      "delete": "Delete",
+      "import": "Import",
+      "export": "Export",
+      "save": "Save",
+      "close": "Close",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "add": "Add",
+      "create": "Create",
+      "accept": "Accept",
+      "refuse": "Refuse",
+      "accepted": "Accepted",
+      "refused": "Refused",
+      "download": "Download",
+      "pending": "Pending",
+      "negotiate": "Negotiate"
+    },
+    "errors": {
+      "server": {
+        "ERROR": "Error",
+        "GENERIC_SERVER_ERROR": "An error occurred while communicating with API"
+      },
+      "required": "The field must not be empty",
+      "field-too-short": "The field must have at least {length} characters",
+      "field-too-long": "The field must have a maximum of {length} characters",
+      "field-must-length": "The field must have {length} characters",
+      "json-invalid": "JSON not valid"
+    },
+    "back": "Back"
+  },
+  "landing-page": {
+    "main-title": "Lorem ipsum",
+    "main-subtitle": "Subtitle",
+    "contacts": "Contacts",
+    "terms": "Terms",
+    "about": "About",
+    "about-value": "About value",
+    "about-value-site": "About value site"
+  },
+  "catalog": {
+    "catalog-description": "Search and negotiate the available linguistic assets in the INESDATA language data space.",
+    "clear-all": "Clear all",
+    "no-results": "No results. Try changing filters",
+    "created": "Created on {date}",
+    "originator": "Originator",
+    "filters": {
+      "languages": {
+        "languages": "Languages",
+        "options": {
+          "en": "English",
+          "es": "Spanish",
+          "it": "Italian"
+        }
+      },
+      "licenses": {
+        "licenses": "Licenses"
+      },
+      "categories": {
+        "categories": "Categories"
+      }
+    },
+    "overview": "Overview",
+    "contents": "Contents",
+    "contracts": "Contracts"
+  },
+  "console": {
+    "id": "Id",
+    "name": "Name",
+    "creation-date": "Creation date",
+    "short-description": "Short description",
+    "languages": "Languages",
+    "categories": "Categories",
+    "contracts": "Contracts",
+    "policy-content": "Content",
+    "policy-permissions": "Permissions",
+    "policy-prohibitions": "Prohibitions",
+    "policy-obligations": "Obligations",
+    "asset-type": "Asset type",
+    "asset-name": "Asset name",
+    "proposal-creation-date": "Proposal creation date",
+    "acquirer": "Acquirer",
+    "owner": "Asset owner",
+    "status": "Status",
+    "asset-info": "Asset info",
+    "contents": "Contents",
+    "text-content": "Text content",
+    "destination": "Destination",
+    "base-url": "Base URL",
+    "region": "Region",
+    "bucket-name": "Bucket Name",
+    "key-name": "Key Name",
+    "content-type": "Content Type",
+    "no-contract-assets-warning": "There are assets without at least one contract, they will be hidden from the search.",
+    "no-contract-asset-warning": "Assets without at least one contract will be hidden from search",
+    "filters": {
+      "all": "All"
+    },
+    "contracts-page": {
+      "assets-count": "{count} assets",
+      "policy-editor": "Policy editor",
+      "contract-editor": "Contract editor"
+    },
+    "operations": {
+      "select-contracts": "Select contracts",
+      "select-assets": "Select assets"
+    },
+    "negotiations-page": {
+      "proposal-received": "Proposals received",
+      "proposal-sent": "Proposals sent",
+      "proposal-accepted": "Proposals accepted",
+      "proposal-refused": "Proposals refused",
+      "PENDING": "Pending",
+      "COMPLETED": "Completed",
+      "REFUSED": "Refused",
+      "negotiation-modal": {
+        "title": "Negotiation {id}"
+      },
+      "operations": {
+        "accept-proposal": {
+          "title": "Accept proposal",
+          "message": "Do you really want to accept this proposal?"
+        },
+        "refuse-proposal": {
+          "title": "Refuse proposal",
+          "message": "Do you really want to refuse this proposal?"
+        }
+      }
+    }
+  }
+}
