@@ -126,6 +126,7 @@ class IndexedDb {
   }
 
   // ASSETS
+  /*
   async assetToDto(asset: AssetUpdate) {
     const assetDto: Asset = {
       id: asset.id,
@@ -254,6 +255,7 @@ class IndexedDb {
       };
     });
   }
+  */
 
   // USERS
   async getUser(id: number): Promise<User> {
@@ -269,6 +271,7 @@ class IndexedDb {
   }
 
   // CONTRACTS
+  /*
   async contractToDto(contract: ContractUpdate) {
     const contractDto: Contract = {
       name: contract.name,
@@ -546,7 +549,7 @@ class IndexedDb {
     });
   }
 
-  async acceptNegotiation(id: number): Promise<void> {
+  async acceptNegotiation(id: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const db: any = this.db;
       if (!db) return;
@@ -564,7 +567,7 @@ class IndexedDb {
     });
   }
 
-  async refuseNegotiation(id: number): Promise<void> {
+  async refuseNegotiation(id: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const db: any = this.db;
       if (!db) return;
@@ -581,7 +584,8 @@ class IndexedDb {
       };
     });
   }
-
+  */
+ 
   // LANGS
   async getLanguages(): Promise<Language[]> {
     return new Promise((resolve, reject) => {

@@ -202,7 +202,7 @@ import { defineComponent } from 'vue';
 import PolicyDetailsFieldModal from '@/components/common/PolicyDetailsFieldModal.vue';
 import assetService from '@/services/asset-service';
 import { useRouter } from 'vue-router';
-import { ContractOffer } from '@/models/contract-offer';
+import type { ContractOffer } from '@/models/contract-offer';
 import notifications from '@/utils/notifications';
 import { useI18n } from 'vue-i18n';
 

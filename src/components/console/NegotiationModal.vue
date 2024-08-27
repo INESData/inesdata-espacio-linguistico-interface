@@ -246,7 +246,7 @@ export default defineComponent({
         hardconfirm: undefined,
       });
       if (confirm) {
-        await negotiationService.acceptProposal(negotiation.value?.id);
+        await negotiationService.acceptProposal(negotiation.value?.id!);
         notification.success({
           type: 'success',
           title: '',
@@ -263,7 +263,7 @@ export default defineComponent({
         hardconfirm: undefined,
       });
       if (confirm) {
-        await negotiationService.refuseProposal(negotiation.value?.id);
+        await negotiationService.refuseProposal(negotiation.value?.id!);
         notification.success({
           type: 'warning',
           title: '',

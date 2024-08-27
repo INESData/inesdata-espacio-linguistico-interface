@@ -37,7 +37,7 @@
     </v-card-text>
     <v-card-actions>
       <v-list-item class="w-100">
-        <template v-slot:prepend>
+        <template v-slot:prepend v-if="$props.resource.creationDate">
           <span class="updated-time">
             {{
               $t('catalog.created', {

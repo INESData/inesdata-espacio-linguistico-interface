@@ -110,7 +110,6 @@ import { PolicyType } from '@/models/policy-type';
 import { type ValidationRule } from '@/models/validationRule';
 import policyService from '@/services/policy-service';
 import notifications from '@/utils/notifications';
-import { title } from 'process';
 import { type Ref, defineComponent, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 

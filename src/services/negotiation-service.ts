@@ -75,11 +75,11 @@ class NegotiationService extends DataService<Negotiation, SearchFilters> {
   }
   */
   async acceptProposal(id: string): Promise<void> {
-    return await indexeddb.acceptNegotiation(id);
+    //return await indexeddb.acceptNegotiation(id);
   }
 
   async refuseProposal(id: string): Promise<void> {
-    return await indexeddb.refuseNegotiation(id);
+    //return await indexeddb.refuseNegotiation(id);
   }
   
   
