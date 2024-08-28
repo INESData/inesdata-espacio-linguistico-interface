@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: inesdata
     ports:
-      - 8080:80
+      - 8090:80
 
   nginx:
     image: nginx:alpine
