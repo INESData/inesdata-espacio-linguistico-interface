@@ -43,9 +43,9 @@ export default defineComponent({
     const contractsNb = ref(0);
     
     onMounted(async () => {
-      assetsNb.value = (await assetService.readAll()).totalElements;
-      policiesNb.value = (await policyService.readAll()).totalElements;
-      contractsNb.value = (await contractService.readAll()).totalElements;
+      assetsNb.value = await assetService.searchCount();
+      policiesNb.value = await policyService.searchCount();
+      contractsNb.value = await contractService.searchCount();
     });
 
     return {

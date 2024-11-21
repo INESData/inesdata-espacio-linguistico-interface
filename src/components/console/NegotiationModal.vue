@@ -98,7 +98,6 @@
             <template v-if="negotiation.status === NegotiationType.PENDING">
               <v-btn
                 color="error"
-                size="x-large"
                 @click="refuseProposal()"
                 variant="flat"
                 class="mr-3"
@@ -110,7 +109,6 @@
 
               <v-btn
                 color="success"
-                size="x-large"
                 @click="acceptProposal()"
                 variant="flat"
                 class="ml-3"
@@ -123,7 +121,6 @@
             <v-btn
               v-else-if="negotiation.status === NegotiationType.COMPLETED"
               color="success"
-              size="x-large"
               variant="tonal"
               class="ml-3"
               min-width="250px"
@@ -135,7 +132,6 @@
             <v-btn
               v-else-if="negotiation.status === NegotiationType.REFUSED"
               color="error"
-              size="x-large"
               variant="tonal"
               class="ml-3"
               min-width="250px"
@@ -154,7 +150,6 @@
               class="mr-2"
               min-width="350px"
               color="warning"
-              size="x-large"
               disabled
               variant="tonal"
             >
@@ -164,16 +159,16 @@
               v-else-if="negotiation.status === NegotiationType.COMPLETED"
               class="primary mr-2"
               min-width="350px"
-              size="x-large"
+              @click="startTransfer()"
+              :disabled="transferInProgress"
             >
-              {{ $t('commons.buttons.download') }}
+              {{ $t('commons.buttons.transfer') }}
             </v-btn>
             <v-btn
               v-else-if="negotiation.status === NegotiationType.REFUSED"
               class="mr-2 ml-2"
               color="error"
               min-width="350px"
-              size="x-large"
               disabled
               variant="tonal"
             >
@@ -181,7 +176,26 @@
               {{ $t('commons.buttons.refused') }}
             </v-btn>
             <v-spacer></v-spacer>
+
+            <v-btn
+              v-if="allowDownload"
+              class="primary mr-2"
+              min-width="350px"
+              @click="downloadFile()"
+              :disabled="transferInProgress"
+            >
+              {{ $t('commons.buttons.download') }}
+            </v-btn>
+
           </v-card-actions>
+
+          <v-card-item v-if="transferInProgress" style="margin-bottom: 20px;">
+            <v-progress-linear
+              color="yellow-darken-2"
+              indeterminate
+            />
+          </v-card-item>
+          
         </template>
       </v-card>
     </template>
@@ -196,10 +210,10 @@ import negotiationService from '@/services/negotiation-service';
 import { type Ref, defineComponent, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import PolicyDetailsFieldModal from '@/components/common/PolicyDetailsFieldModal.vue';
-import userService from '@/services/user-service';
 import { NegotiationType } from '@/models/negotiation-type';
 import ConfirmModal, { type ConfirmModalExpose } from '@/components/common/Confirm.vue';
 import notifications from '@/utils/notifications';
+import transferService from '@/services/transfer-service';
 
 type ViewDialogs = {
   show: boolean;
@@ -225,6 +239,7 @@ export default defineComponent({
       isReceived.value =
         negotiation.value.type === "PROVIDER";
       loading.value = false;
+      allowDownload.value = false;
     };
 
     const hide = () => {
@@ -234,6 +249,57 @@ export default defineComponent({
     const policydetailsfieldmodalRef = ref();
     const showPolicyDetails = (title: string, text: string) => {
       policydetailsfieldmodalRef.value.show(title, text);
+    };
+
+    const transferInProgress = ref(false);
+    const allowDownload = ref(false);
+    const transferId = ref();
+    const startTransfer = async () => {
+
+      transferInProgress.value = true;
+
+      const transfer = await transferService.startTransfer(
+        negotiation.value?.contractAgreement?.id!,
+        negotiation.value?.contractAgreement?.asset.id!,
+        negotiation.value?.contractAgreement?.consumerId!,
+        negotiation.value?.counterPartyAddress!
+      );
+
+      if (transfer["@id"]) {
+
+        let transferFinished = false;
+
+        while (!transferFinished) {
+
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          //TODO
+          //transferFinished = await transferService.checkTransferStatus(transfer["@id"]);
+          transferFinished = true;
+        }
+
+        notification.success({
+          type: 'success',
+          title: '',
+          message: 'Transfer completed',
+        });
+
+        transferId.value = transfer["@id"];
+
+        allowDownload.value = true;
+
+      }
+      else {
+
+        //TODO
+      }
+
+      transferInProgress.value = false;
+    };
+
+    const downloadFile = async () => {
+
+      await transferService.downloadFile(transferId.value, negotiation.value?.contractAgreement?.asset.id!);
     };
 
     const { notification } = notifications();
@@ -282,11 +348,15 @@ export default defineComponent({
       negotiation,
       showPolicyDetails,
       policydetailsfieldmodalRef,
+      startTransfer,
       isReceived,
       NegotiationType,
       acceptProposal,
       refuseProposal,
       confirmmodalref,
+      transferInProgress,
+      allowDownload,
+      downloadFile
     };
   },
 });

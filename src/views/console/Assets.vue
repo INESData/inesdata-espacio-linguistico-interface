@@ -165,7 +165,7 @@ export default defineComponent({
     const paginationOptions: Ref<Pagination> = ref({
       page: 1,
       size: 10,
-      sort: [],
+      sort: [{key: 'createdAt', order: 'desc'}],
     });
     const reqController = new AbortController();
     const reqSignal = reqController.signal;
@@ -186,13 +186,13 @@ export default defineComponent({
             label: t('commons.' + EntityType.CORPUS + '.' + EntityType.CORPUS),
             value: EntityType.CORPUS,
           },
-          {
+          /*{
             label: t('commons.' + EntityType.SERVICE + '.' + EntityType.SERVICE),
             value: EntityType.SERVICE,
-          },
+          },*/
           {
-            label: t('commons.' + EntityType.CONTRACT + '.' + EntityType.CONTRACT),
-            value: EntityType.CONTRACT,
+            label: t('commons.' + EntityType.MODEL + '.' + EntityType.MODEL),
+            value: EntityType.MODEL,
           },
           {
             label: t(
@@ -263,9 +263,6 @@ export default defineComponent({
       for (const filter in filters.value) {
           searchFilters[filter] = filters.value[filter].value;
       }
-
-      searchFilters.sortField = "createdAt"
-      searchFilters.sortOrder = "DESC"
 
       const response: Paginated<Asset> = await assetService.search(
         userService.currentUser.id,

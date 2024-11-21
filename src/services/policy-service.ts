@@ -2,7 +2,7 @@ import type { Paginated } from '@/models/paginated';
 import type { Pagination } from '@/models/pagination';
 import { type SearchFilters } from '@/models/search-filters';
 import type { Policy } from '@/models/policy';
-import type { PolicyType } from '@/models/policy-type';
+import { PolicyType } from '@/models/policy-type';
 import DataService from '@/services/data-service';
 
 export interface PolicyUpdate {
@@ -18,19 +18,27 @@ export interface PolicyUpdate {
 
 class PolicyService extends DataService<Policy, SearchFilters> {
 
-  apiPath = this.baseUrl + '/v2/policydefinitions';
+  apiPath = this.baseUrl + '/v3/policydefinitions';
+
+  entityType = "policyDefinition";
 
   async toEntity(data: any): Promise<Policy> {
 
     const policy:Policy = {
       id: data['@id'],
       creationDate: data['createdAt'],
-      name: data.privateProperties['name'],
+      name: data['@id'],/*data.privateProperties['name'],*/
       permissions: '',
       prohibitions: '',
       obligations: '',
-      type: data.privateProperties['policy_type']
+      type: PolicyType.CONTRACT
     };
+
+    if (data.privateProperties && data.privateProperties['name'])
+      policy.name = data.privateProperties['name'];
+
+    if (data.privateProperties && data.privateProperties['policy_type'])
+      policy.type = data.privateProperties['policy_type'];
 
     if (data.policy['odrl:permission'])
       policy.permissions = JSON.stringify(data.policy['odrl:permission'], null, 2);

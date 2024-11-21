@@ -7,6 +7,8 @@ import type { AssetFile } from '@/models/asset-file';
 import DataService from '@/services/data-service';
 import axios from 'axios';
 import type { ContractOffer } from '@/models/contract-offer';
+import { DestinationType } from '@/models/destination-type';
+import type { DataDestination } from '@/models/data-destination';
 
 export interface AssetUpdate {
   id: string;
@@ -25,30 +27,40 @@ class SearchService extends DataService<Asset, SearchFilters> {
 
   apiPath = this.baseUrl + '/v3/assets';
 
+  entityType = "asset";
+
   async toEntity(data: any): Promise<Asset> {
     
     const asset:Asset = {
       id: data['@id'],
       name: data.properties['name'],
-      type: data.properties['type'],
-      description: data.properties['description'],
-      textContent: data.properties['textContent'],
+      type: data.properties['assetType'],
+      description: data.properties['shortDescription'],
+      textContent: data.properties['http://purl.org/dc/terms/description'],
       creationDate: data.properties['created_at'],
       languages: [],
       categories: [],
       contents: [],
       contenttype: data.properties['contenttype'],
-      destination: data.dataAddress['type']
+      dataDestination: {
+        type: data.dataAddress['type']
+      }
     };
 
-    if (asset.destination == "HttpData") {
-      asset.baseUrl = data.dataAddress["baseUrl"];
-      asset.proxyPath = data.dataAddress["proxyPath"];
+    if (asset.type == undefined)
+      asset.type = EntityType.CORPUS;
+
+    if (asset.dataDestination.type == DestinationType.HttpData) {
+      asset.dataDestination.baseUrl = data.dataAddress["baseUrl"];
+      asset.dataDestination.proxyPath = data.dataAddress["proxyPath"];
     }
-    else if (asset.destination == "AmazonS3") {
-      asset.region = data.dataAddress["region"];
-      asset.bucketName = data.dataAddress["bucketName"];
-      asset.keyName = data.dataAddress["keyName"];
+    else if (asset.dataDestination.type == DestinationType.AmazonS3) {
+      asset.dataDestination.region = data.dataAddress["region"];
+      asset.dataDestination.bucketName = data.dataAddress["bucketName"];
+      asset.dataDestination.keyName = data.dataAddress["keyName"];
+    }
+    else if (asset.dataDestination.type == DestinationType.InesDataStore) {
+      asset.dataDestination.folder = data.dataAddress["folder"];
     }
 
     if (data.properties['languages']) {
@@ -81,30 +93,34 @@ class SearchService extends DataService<Asset, SearchFilters> {
     var assetRequest: any = {
       "@context": {
         "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
+        "dcterms":"http://purl.org/dc/terms/",
       },
       properties: {
         "name": entity.name,
-        "type": entity.type,
-        "description": entity.description,
-        "textContent": entity.textContent,
+        "assetType": entity.type,
+        "shortDescription": entity.description,
+        "dcterms:description": entity.textContent,
         "languages": [],
         "categories": [],
         "contenttype": entity.contenttype
       },
       dataAddress: {
-        "type": entity.destination,
-        "name": entity.name,
+        "type": entity.dataDestination.type
       }
     };
 
-    if (entity.destination == "HttpData") {
-      assetRequest.dataAddress["baseUrl"] = entity.baseUrl;
+    if (entity.dataDestination.type == DestinationType.HttpData) {
+      assetRequest.dataAddress["name"] = entity.name;
+      assetRequest.dataAddress["baseUrl"] = entity.dataDestination.baseUrl;
       assetRequest.dataAddress["proxyPath"] = "true";
     }
-    else if (entity.destination == "AmazonS3") {
-      assetRequest.dataAddress["region"] = entity.region;
-      assetRequest.dataAddress["bucketName"] = entity.bucketName;
-      assetRequest.dataAddress["keyName"] = entity.keyName;
+    else if (entity.dataDestination.type == DestinationType.AmazonS3) {
+      assetRequest.dataAddress["region"] = entity.dataDestination.region;
+      assetRequest.dataAddress["bucketName"] = entity.dataDestination.bucketName;
+      assetRequest.dataAddress["keyName"] = entity.dataDestination.keyName;
+    }
+    else if (entity.dataDestination.type == DestinationType.InesDataStore) {
+      assetRequest.dataAddress["folder"] = entity.dataDestination.folder;
     }
 
     if (entity.id) {
@@ -127,7 +143,18 @@ class SearchService extends DataService<Asset, SearchFilters> {
       }
     }
 
-    return assetRequest;
+    if (entity.dataDestination.type == DestinationType.InesDataStore) {
+
+      const formData = new FormData();
+      formData.append("json", new Blob([JSON.stringify(assetRequest)], { type: "application/json" }));
+      formData.append("file", entity.dataDestination.fileToUpload![0]);
+
+      return formData;
+    }
+    else {
+
+      return assetRequest;
+    }
   }
 
   async getNoContractAssetsCount(userId: string): Promise<number> {
@@ -142,7 +169,7 @@ class SearchService extends DataService<Asset, SearchFilters> {
 
   async negotiate(assetId: string, assigner: string, contractOffer: ContractOffer, counterPartyAddress: string): Promise<boolean> {
 
-    let url = this.baseUrl + '/v2/contractnegotiations';
+    let url = this.baseUrl + '/v3/contractnegotiations';
 
     var contractRequest: any = {
      "@context": {
@@ -150,7 +177,7 @@ class SearchService extends DataService<Asset, SearchFilters> {
       "odrl": "http://www.w3.org/ns/odrl.jsonld"
       },
       "@type": "ContractRequest",
-      "counterPartyAddress": counterPartyAddress,
+      "counterPartyAddress": counterPartyAddress.replace('\n', ''),
       "protocol": "dataspace-protocol-http",
       "policy": {
         "@context": "http://www.w3.org/ns/odrl.jsonld",
@@ -182,9 +209,10 @@ class SearchService extends DataService<Asset, SearchFilters> {
 
   async readFromCatalog(id: string): Promise<Asset> {
 
-    let results = await this.doCatalogRequest();
+    const searchFilters = {} as SearchFilters;
+    searchFilters["id"] = id;
 
-    results = results.filter((asset) => asset.id == id)
+    let results = await this.doCatalogSearchRequest(undefined, searchFilters);
 
     if (results.length > 0)
       return results[0];
@@ -198,15 +226,9 @@ class SearchService extends DataService<Asset, SearchFilters> {
     signal?: AbortSignal,
   ): Promise<Paginated<Asset>> {
 
-    let results = await this.doCatalogRequest();  
+    let totalResultsCount = await this.doCatalogSearchCountRequest(filters);
 
-    if (filters && filters.type) {
-      results = results.filter((asset) => asset.type ==  filters.type);
-    }
-
-    if (filters && filters.query) {
-      results = results.filter((asset) => asset.name.toLocaleLowerCase().includes(filters.query.toLocaleLowerCase()))
-    }
+    let results = await this.doCatalogSearchRequest(pagination, filters);
 
     if (filters && filters.languages && filters.languages.length > 0) {
       results = results.filter((asset) => this.containsLangs(asset, filters.languages));
@@ -216,7 +238,7 @@ class SearchService extends DataService<Asset, SearchFilters> {
       results = results.filter((asset) => this.containsCategories(asset, filters.categories));
     }
 
-    return this.buildReturnData(results, pagination);
+    return this.buildReturnData(results, pagination, totalResultsCount);
   }
 
   private containsLangs(asset: Asset, langs: string[]): boolean {
@@ -251,16 +273,42 @@ class SearchService extends DataService<Asset, SearchFilters> {
     return false;
   }
 
-  private async doCatalogRequest(): Promise<Asset[]> {
+  private async doCatalogSearchRequest(pagination: Pagination | undefined, filters?: SearchFilters): Promise<Asset[]> {
 
-    let url = this.baseUrl + '/federatedcatalog';
+    let url = this.baseUrl + '/federatedcatalog/request';
 
-    let request = {
-      "edc:operandLeft": "",
-      "edc:operandRight": "",
-      "edc:operator": "",
-      "edc:Criterion":""
+    let request : any = {
+      "@context":{
+        "@vocab":"https://w3id.org/edc/v0.0.1/ns/"
+      },
+      "filterExpression":[]
     };
+
+    request.filterExpression = this.buildCatalogSearchFilters(filters);
+
+    if (filters && filters.id) {
+      let filter = {
+        "operandLeft": "id",
+        "operator": "=",
+        "operandRight": filters.id
+      };
+      request.filterExpression.push(filter);
+    }
+
+    if (pagination) {
+
+      for (const [i, sortItem] of pagination.sort.entries()) {
+        request.sortField = sortItem.key;
+        request.sortOrder = sortItem.order;
+      }
+
+      if (request.sortOrder != undefined)
+        request.sortOrder = request.sortOrder.toUpperCase();
+
+      request.offset = (pagination.page- 1) * pagination.size;
+      if (pagination.size != -1)
+        request.limit = ((pagination.page- 1) * pagination.size) + pagination.size;
+    }
 
     const response = await axios.post(url, request);
 
@@ -275,6 +323,58 @@ class SearchService extends DataService<Asset, SearchFilters> {
     }
 
     return results;
+  }
+
+  private async doCatalogSearchCountRequest(filters?: SearchFilters): Promise<number> {
+
+    let url = this.baseUrl + '/pagination/count?type=federatedCatalog';
+
+    let filterData:any = {
+      "@context": {
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+      },
+      "filterExpression": []
+    }
+
+    filterData.filterExpression = this.buildCatalogSearchFilters(filters);
+
+    const response = await axios.post(url, filterData);
+
+    if (response) {
+      return response.data;
+    }
+    else {
+      return 0;
+    }
+  }
+
+  private buildCatalogSearchFilters(filters?: SearchFilters) : any[] {
+
+    let filterExpression = [];
+
+    if (filters) {
+      
+      if (filters.query) {
+        let filter = {
+          "operandLeft": "genericSearch",
+          "operator": "like",
+          "operandRight": "%" + filters.query + "%"
+        };
+        filterExpression.push(filter);
+      }
+
+      if (filters.type) {
+        let filter = {
+          "operandLeft": "genericSearch",
+          "operator": "=",
+          "operandRight": filters.type
+        };
+        filterExpression.push(filter);
+      }      
+
+    }
+
+    return filterExpression;
   }
 
   private readCatalog(elem: any): Asset[] {
@@ -301,7 +401,7 @@ class SearchService extends DataService<Asset, SearchFilters> {
     const asset:Asset = {
       id: catalogAsset['@id'],
       name: catalogAsset['name'],
-      type: catalogAsset['type'],
+      type: catalogAsset['assetType'],
       description: catalogAsset['description'],
       textContent: catalogAsset['textContent'],
       creationDate: catalogAsset['created_at'],
@@ -309,10 +409,10 @@ class SearchService extends DataService<Asset, SearchFilters> {
       categories: [],
       contents: [],
       originator: catalogElem['originator'],
-      participantId: catalogElem['participantId'],
+      participantId: catalogAsset['participantId'],
       contractOffers: [],
       contenttype: catalogAsset['contenttype'],
-      destination: ''
+      dataDestination: {} as DataDestination
     };
 
     if (catalogAsset['languages']) {
@@ -354,21 +454,21 @@ class SearchService extends DataService<Asset, SearchFilters> {
   private readContractOffer(data: any): ContractOffer {
 
     const policy: ContractOffer = {
-      id: data['@id'],
-      type: data['@type'],
+      id: data.offer['@id'],
+      type: data.offer['@type'],
       permission: '',
       prohibition: '',
       obligation: '',
     };
 
-    if (data['odrl:permission'])
-      policy.permission = JSON.stringify(data['odrl:permission'], null, 2);
+    if (data.offer['odrl:permission'])
+      policy.permission = JSON.stringify(data.offer['odrl:permission'], null, 2);
 
-    if (data['odrl:prohibition'])
-      policy.prohibition = JSON.stringify(data['odrl:prohibition'], null, 2);
+    if (data.offer['odrl:prohibition'])
+      policy.prohibition = JSON.stringify(data.offer['odrl:prohibition'], null, 2);
 
-    if (data['odrl:obligation'])
-      policy.obligation = JSON.stringify(data['odrl:obligation'], null, 2);
+    if (data.offer['odrl:obligation'])
+      policy.obligation = JSON.stringify(data.offer['odrl:obligation'], null, 2);
 
     return policy;
   }

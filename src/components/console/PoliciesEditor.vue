@@ -96,9 +96,6 @@ export default defineComponent({
       for (const filter in filters.value) {
         searchFilters[filter] = filters.value[filter].value;
       }
-
-      searchFilters.sortField = "createdAt"
-      searchFilters.sortOrder = "DESC"
       
       const response: Paginated<Policy> = await policyService.search(
         userService.currentUser.id,
@@ -141,7 +138,7 @@ export default defineComponent({
     const paginationOptions: Ref<Pagination> = ref({
       page: 1,
       size: 10,
-      sort: [],
+      sort: [{key: 'createdAt', order: 'desc'}],
     });
     const totalItems = ref(0);
     const isLastPage = ref(false);

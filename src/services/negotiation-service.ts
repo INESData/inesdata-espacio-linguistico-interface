@@ -20,16 +20,19 @@ export interface NegotiationUpdate {
 
 class NegotiationService extends DataService<Negotiation, SearchFilters> {
 
-  apiPath = this.baseUrl + '/v2/contractnegotiations';
+  apiPath = this.baseUrl + '/v3/contractnegotiations';
+
+  entityType = "";
 
   async toEntity(data: any): Promise<Negotiation> {
-
+    
     const negotiation:Negotiation = {
       id: data['@id'],
       status: NegotiationType.PENDING,
       creationDate: data['createdAt'],
       type: data['type'],
-      counterPartyId: data['counterPartyId']
+      counterPartyId: data['counterPartyId'],
+      counterPartyAddress: data['counterPartyAddress']
     }
 
     if (data['state'] == "FINALIZED")

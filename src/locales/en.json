@@ -46,7 +46,9 @@
       "contracts": "Contracts",
       "contracts-description": "A Contract Definition specifies the Access Policy on a Data Asset, and the Usage Policy - duties, rules, and obligations one must follow.",
       "negotiations": "Negotiations",
-      "negotiations-description": "Here you can review all your contract offer negotiations."
+      "negotiations-description": "Here you can review all your contract offer negotiations.",
+      "transfer-history": "Transfer History",
+      "transfer-history-description": "Here you can review your entire asset transfer history."
     },
     "locales": {
       "language": "Language",
@@ -90,7 +92,8 @@
       "refused": "Refused",
       "download": "Download",
       "pending": "Pending",
-      "negotiate": "Negotiate"
+      "negotiate": "Negotiate",
+      "transfer": "Transfer"
     },
     "errors": {
       "server": {
@@ -144,6 +147,7 @@
     "id": "Id",
     "name": "Name",
     "creation-date": "Creation date",
+    "last-updated": "Last updated",
     "short-description": "Short description",
     "languages": "Languages",
     "categories": "Categories",
@@ -167,6 +171,8 @@
     "bucket-name": "Bucket Name",
     "key-name": "Key Name",
     "content-type": "Content Type",
+    "file-to-upload": "File to Upload",
+    "folder": "Folder",
     "no-contract-assets-warning": "There are assets without at least one contract, they will be hidden from the search.",
     "no-contract-asset-warning": "Assets without at least one contract will be hidden from search",
     "filters": {
@@ -202,6 +208,12 @@
           "message": "Do you really want to refuse this proposal?"
         }
       }
+    },
+    "transfers-page": {
+      "consumer": "Consumer",
+      "provided": "Provided",
+      "asset-id": "Asset Id",
+      "contract-id": "Contract Id"
     }
   }
 }

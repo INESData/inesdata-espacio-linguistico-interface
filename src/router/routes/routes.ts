@@ -155,6 +155,16 @@ export default [
               requiresAuth: true
             },
           },
+          {
+            path: 'transfer-history',
+            name: 'transfer-history',
+            component: () => import('@/views/console/Transfers.vue'),
+            meta: {
+              parent: 'console',
+              submenu: true,
+              requiresAuth: true
+            },
+          },
         ],
         meta: { requiresAuth: true },
       },

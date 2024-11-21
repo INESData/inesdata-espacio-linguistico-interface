@@ -7,6 +7,7 @@ export interface Negotiation {
   status: NegotiationType;
   contractAgreement?: ContractAgreement;
   type: string;
-  counterPartyId?: string;
+  counterPartyId: string;
+  counterPartyAddress: string;
   creationDate: number;
 }

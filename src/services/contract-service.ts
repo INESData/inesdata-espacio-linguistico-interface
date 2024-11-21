@@ -19,7 +19,9 @@ export interface ContractUpdate {
 
 class ContractService extends DataService<Contract, SearchFilters> {
 
-  apiPath = this.baseUrl + '/v2/contractdefinitions';
+  apiPath = this.baseUrl + '/v3/contractdefinitions';
+
+  entityType = "contractDefinition";
 
   async toEntity(data: any): Promise<Contract> {
     

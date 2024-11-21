@@ -113,7 +113,7 @@ export default defineComponent({
     const paginationOptions: Ref<Pagination> = ref({
       page: 1,
       size: 10,
-      sort: [],
+      sort: [{key: 'createdAt', order: 'desc'}],
     });
     const totalItems = ref(0);
     const isLastPage = ref(false);
@@ -134,9 +134,7 @@ export default defineComponent({
       }
 
       searchFilters.negotiationType = "PROVIDER";
-      searchFilters.sortField = "createdAt"
-      searchFilters.sortOrder = "DESC"
-
+      
       const response: Paginated<Negotiation> = await negotiationService.search(
         userService.currentUser.id,
         paginationOptions.value,

@@ -8,6 +8,8 @@ export default abstract class DataService<TEntity, TFilter> {
 
   abstract apiPath: string;
 
+  abstract entityType: string;
+
   abstract toEntity(data: any): Promise<TEntity>;
 
   abstract buildEntityRequest(entity: TEntity): any;
@@ -18,7 +20,8 @@ export default abstract class DataService<TEntity, TFilter> {
 
     let filterData:any = {
       "@context": {
-        "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
+        "dcterms":"http://purl.org/dc/terms/"
       },
       "offset": 0,
       "sortOrder":  "ASC",
@@ -26,12 +29,31 @@ export default abstract class DataService<TEntity, TFilter> {
       "filterExpression": []
     }
 
-    if (filters) {
+    filterData.filterExpression = this.buildSearchFilters(filters);
 
-      if (filters.sortField && filters.sortOrder) {
-        filterData.sortField = filters.sortField;
-        filterData.sortOrder = filters.sortOrder;
+    if (pagination) {
+
+      for (const [i, sortItem] of pagination.sort.entries()) {
+        filterData.sortField = sortItem.key;
+        filterData.sortOrder = sortItem.order;
       }
+
+      if (filterData.sortOrder != undefined)
+        filterData.sortOrder = filterData.sortOrder.toUpperCase();
+
+      filterData.offset = (pagination.page- 1) * pagination.size;
+      if (pagination.size != -1)
+        filterData.limit = ((pagination.page- 1) * pagination.size) + pagination.size;
+    }
+
+    return filterData;
+  }
+
+  private buildSearchFilters(filters?: SearchFilters) : any[] {
+
+    let filterExpression = [];
+
+    if (filters) {
       
       if (filters.query) {
         let filter = {
@@ -39,16 +61,16 @@ export default abstract class DataService<TEntity, TFilter> {
           "operator": "like",
           "operandRight": filters.query + "%"
         };
-        filterData.filterExpression.push(filter);
+        filterExpression.push(filter);
       }
 
       if (filters.type) {
         let filter = {
-          "operandLeft": "https://w3id.org/edc/v0.0.1/ns/type",
+          "operandLeft": "https://w3id.org/edc/v0.0.1/ns/assetType",
           "operator": "=",
           "operandRight": filters.type
         };
-        filterData.filterExpression.push(filter);
+        filterExpression.push(filter);
       }
 
       if (filters.negotiationType) {
@@ -57,46 +79,44 @@ export default abstract class DataService<TEntity, TFilter> {
           "operator": "=",
           "operandRight": filters.negotiationType
         };
-        filterData.filterExpression.push(filter);
+        filterExpression.push(filter);
+      }
+
+      if (filters.transferType) {
+        let filter = {
+          "operandLeft": "type",
+          "operator": "=",
+          "operandRight": filters.transferType
+        };
+        filterExpression.push(filter);
       }
     }
 
-    /*
-    if (pagination) {
-      filterData.offset = (pagination.page- 1) * pagination.size;
-      if (pagination.size != -1)
-        filterData.limit = ((pagination.page- 1) * pagination.size) + pagination.size;
-    }
-    */
-
-    return filterData;
+    return filterExpression;
   }
 
-  protected buildReturnData(results: TEntity[], pagination: Pagination | undefined): Paginated<TEntity> {
+  protected buildReturnData(results: TEntity[], pagination: Pagination | undefined, totalResultsCount: number): Paginated<TEntity> {
 
-    let offset = 0;
     let currentPage = 1;
     let pageSize = -1;
-    let totalResultsCount = results.length;
-    let pageResults;
+    let isLastPage = false;
 
     if (pagination) {
       currentPage = pagination.page;
       pageSize = pagination.size;
-      offset = (pagination.page- 1) * pagination.size;
     }
 
-    if (pageSize != -1)
-      pageResults = results.slice(offset, offset + pageSize);
-    else
-      pageResults = results.slice(offset);
-
+    let totalPages = Math.ceil(totalResultsCount / pageSize);
+    if (totalPages === currentPage) {
+      isLastPage = true;
+    }
+    
     const returnData:Paginated<TEntity> = {
-      content: pageResults,
+      content: results,
       size: pageSize,
-      totalElements: results.length,
-      totalPages: Math.ceil(totalResultsCount / pageSize),
-      last: true,
+      totalElements: totalResultsCount,
+      totalPages: totalPages,
+      last: isLastPage,
       number: currentPage
     };
 
@@ -105,30 +125,10 @@ export default abstract class DataService<TEntity, TFilter> {
 
   async readAll(
     pagination?: Pagination,
-    filter?: TFilter,
     signal?: AbortSignal,
   ): Promise<Paginated<TEntity>> {
-    const url = this.apiPath + '/request';
 
-    const params = new URLSearchParams();
-    if (pagination) {
-      //params.append('page', String(pagination.page - 1));
-      //params.append('size', String(pagination.size));
-      for (const [i, sortItem] of pagination.sort.entries()) {
-        params.append('sort', sortItem.key + ',' + sortItem.order);
-      }
-    }
-
-    const response = await axios.post(url, filter, { params, signal });
-
-    var results = [];
-    if (response) {
-      for (const elem of response.data) {
-        results.push(await this.toEntity(elem));
-      }
-    }
-
-    return this.buildReturnData(results, pagination);
+    return this.search(undefined, pagination);
   }
 
   async read(id: string): Promise<TEntity> {
@@ -138,8 +138,12 @@ export default abstract class DataService<TEntity, TFilter> {
   }
 
   async create(create: TEntity): Promise<TEntity> {
-    const url = this.apiPath;
+    let url = this.apiPath;
     let data = this.buildEntityRequest(create);
+
+    if (data instanceof FormData && url.endsWith("/assets")) {
+      url = this.baseUrl + '/s3assets';
+    }
     
     let newEntity:any;
     await axios.post(url, data)
@@ -171,6 +175,8 @@ export default abstract class DataService<TEntity, TFilter> {
     signal?: AbortSignal,
   ): Promise<Paginated<TEntity>> {
 
+    let totalResultsCount = await this.searchCount(filters);
+    
     let url = this.apiPath + '/request';
     let filterData = this.buildFilterData(pagination, filters);
 
@@ -183,6 +189,40 @@ export default abstract class DataService<TEntity, TFilter> {
       }
     }
     
-    return this.buildReturnData(results, pagination);
+    return this.buildReturnData(results, pagination, totalResultsCount);
+  }
+
+  async searchCount(filters?: SearchFilters) : Promise<number> {
+
+    let url: string;
+
+    if (this.entityType != undefined && this.entityType != "") {
+      url = this.baseUrl + '/pagination/count?type=' + this.entityType;
+    }
+    else {
+      url = this.apiPath + '/request';
+    }
+
+    let filterData:any = {
+      "@context": {
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+      },
+      "filterExpression": []
+    }
+
+    filterData.filterExpression = this.buildSearchFilters(filters);
+
+    const response = await axios.post(url, filterData);
+
+    if (response) {
+
+      if (Array.isArray(response.data))
+        return response.data.length;
+      else
+        return response.data;
+    }
+    else {
+      return 0;
+    }
   }
 }

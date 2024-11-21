@@ -40,7 +40,7 @@
               autocomplete="off"
               v-model.trim="asset.name"
               id="input-asset-name"
-            ></v-text-field>
+            />
           </v-col>
           <v-col cols="8">
             <v-textarea
@@ -53,7 +53,7 @@
               rows="3"
               no-resize
               id="input-asset-short-desc"
-            ></v-textarea>
+            />
           </v-col>
           <v-col cols="12">
             <div class="tabs">
@@ -89,7 +89,7 @@
                       v-model="searchCategory"
                       hide-details
                       autofocus
-                    ></v-text-field>
+                    />
                   </div>
                 </template>
               </v-select>
@@ -115,7 +115,7 @@
                       v-model="searchLang"
                       hide-details
                       autofocus
-                    ></v-text-field>
+                    />
                   </div>
                 </template>
               </v-select>
@@ -128,71 +128,96 @@
                 v-model="asset.textContent"
                 rows="20"
                 id="input-asset-text-content"
-              ></v-textarea>
+              />
             </div>
           </v-col>
           <v-col cols="8" v-show="selectedTab === 2">
             <div>
-              <v-text-field
-                :label="$t('console.content-type')"
-                :rules="[rules.required, rules.min, rules.nameMax]"
-                variant="outlined"
-                density="compact"
-                autocomplete="off"
-                v-model.trim="asset.contenttype"
-                id="input-content-type"
-              ></v-text-field>
 
               <v-select
-                :label="$t('console.destination')"
-                :items="['HttpData', 'AmazonS3']"
+                :label="$t('console.content-type')"
+                :items="contentTypes"
+                item-value="value"
+                :item-title="(item) => item.key != undefined ? item.key + ' (' + item.value + ')' : ''"
                 :rules="[rules.required]"
                 variant="outlined"
                 density="compact"
-                v-model.trim="asset.destination"
-                id="input-destination"
-              ></v-select>
+                v-model.trim="asset.contenttype"
+                id="input-content-type"
+              >
+              
+              </v-select>
 
-              <div v-if="asset.destination == 'HttpData'">
-                <v-text-field
-                :label="$t('console.base-url')"
-                :rules="[rules.required, rules.min, rules.descMax]"
+              <v-select
+                :label="$t('console.destination')"
+                :items="Object.values(DestinationType)"
+                :rules="[rules.required]"
                 variant="outlined"
                 density="compact"
-                autocomplete="off"
-                v-model.trim="asset.baseUrl"
-                id="input-base-url"
-                ></v-text-field>
+                v-model.trim="asset.dataDestination.type"
+                id="input-destination"
+              />
+
+              <div v-if="asset.dataDestination.type == DestinationType.HttpData">
+                <v-text-field
+                  :label="$t('console.base-url')"
+                  :rules="[rules.required, rules.min, rules.descMax]"
+                  variant="outlined"
+                  density="compact"
+                  autocomplete="off"
+                  v-model.trim="asset.dataDestination.baseUrl"
+                  id="input-base-url"
+                />
               </div>
               
-              <div v-if="asset.destination == 'AmazonS3'">
+              <div v-if="asset.dataDestination.type == DestinationType.AmazonS3">
                 <v-text-field
                   :label="$t('console.region')"
                   :rules="[rules.required, rules.min, rules.nameMax]"
                   variant="outlined"
                   density="compact"
                   autocomplete="off"
-                  v-model.trim="asset.region"
+                  v-model.trim="asset.dataDestination.region"
                   id="input-region"
-                ></v-text-field>
+                />
                 <v-text-field
                   :label="$t('console.bucket-name')"
                   :rules="[rules.required, rules.min, rules.descMax]"
                   variant="outlined"
                   density="compact"
                   autocomplete="off"
-                  v-model.trim="asset.bucketName"
+                  v-model.trim="asset.dataDestination.bucketName"
                   id="input-bucket-name"
-                ></v-text-field>
+                />
                 <v-text-field
                   :label="$t('console.key-name')"
                   :rules="[rules.required, rules.min, rules.descMax]"
                   variant="outlined"
                   density="compact"
                   autocomplete="off"
-                  v-model.trim="asset.keyName"
+                  v-model.trim="asset.dataDestination.keyName"
                   id="input-key-name"
-                ></v-text-field>
+                />
+              </div>
+
+              <div v-if="asset.dataDestination.type == DestinationType.InesDataStore">
+                <v-file-input
+                  :label="$t('console.file-to-upload')"
+                  :rules="[rules.requiredFile]"
+                  variant="outlined"
+                  density="compact"
+                  v-model.trim="asset.dataDestination.fileToUpload"
+                  id="input-file"
+                />
+                <v-text-field
+                  :label="$t('console.folder')"
+                  :rules="[rules.required, rules.min, rules.descMax]"
+                  variant="outlined"
+                  density="compact"
+                  autocomplete="off"
+                  v-model.trim="asset.dataDestination.folder"
+                  id="input-folder"
+                />
               </div>
               
             </div>
@@ -207,15 +232,12 @@
 <script lang="ts">
 import { type Asset } from '@/models/asset';
 import { type Category } from '@/models/category';
-import { type Contract } from '@/models/contract';
 import { type Language } from '@/models/language';
-import { type Paginated } from '@/models/paginated';
 import { EntityType } from '@/models/resource-type';
 import { type ValidationRule } from '@/models/validationRule';
 import assetService from '@/services/asset-service';
 import categoryService from '@/services/category-service';
 import languageService from '@/services/language-service';
-import userService from '@/services/user-service';
 import notifications from '@/utils/notifications';
 import { computed } from 'vue';
 import { type Ref, onMounted } from 'vue';
@@ -223,6 +245,9 @@ import { defineComponent, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
 import ConfirmModal, { type ConfirmModalExpose } from '@/components/common/Confirm.vue';
+import { DestinationType } from '@/models/destination-type';
+import { type DataDestination } from '@/models/data-destination';
+import { ContentTypes } from '@/models/content-types';
 
 export default defineComponent({
   name: 'AssetDetailsView',
@@ -235,6 +260,15 @@ export default defineComponent({
     const loading = ref(true);
     const asset: Ref<Asset | undefined> = ref();
     const assetBackup: Ref<Asset | undefined> = ref();
+
+    let contentTypes: any[] = [];
+    for (const [key, value] of Object.entries(ContentTypes)) {
+      let contentTypeValue = {
+        'key': key.replace("_", ""),
+        'value': value
+      };
+      contentTypes.push(contentTypeValue);
+    }
 
     const assetform = ref<HTMLFormElement | null>(null);
     const isFormValid: Ref<boolean> = ref(true);
@@ -294,7 +328,7 @@ export default defineComponent({
           type: route.params.type as EntityType,
           contents: [],
           contenttype: '',
-          destination: ''
+          dataDestination: {} as DataDestination
         };
       } else if (route.name === 'asset-edit') {
         asset.value = await assetService.read(route.params.id as string);
@@ -306,6 +340,7 @@ export default defineComponent({
 
     const rules: Ref<{ [key: string]: ValidationRule }> = ref({
       required: (value: string) => !!value || t('commons.errors.required'),
+      requiredFile: (value: File[]) => (value && value.length > 0 && value[0] && value[0].size > 0) || t('commons.errors.required'),
       min: (value: string) =>
         (value && value.length >= 1) || t('commons.errors.field-too-short', { length: 1 }),
       nameMax: (value: string) =>
@@ -417,6 +452,8 @@ export default defineComponent({
       searchCategory,
       searchLang,
       confirmmodal,
+      DestinationType,
+      contentTypes
     };
   },
 });

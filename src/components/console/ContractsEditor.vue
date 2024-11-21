@@ -92,7 +92,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-pagination v-model="paginationOptions.page" :length="totalPages" rounded="0"></v-pagination>
+    <v-pagination @update:model-value="loadItems" v-model="paginationOptions.page" :length="totalPages" rounded="0" />
     <policy-details-modal ref="policydetailsmodalRef" />
     <confirm-modal ref="confirmmodal" />
     <contract-editor-modal ref="contracteditormodalRef" @saved="loadItems" />
@@ -171,7 +171,7 @@ export default defineComponent({
     const paginationOptions: Ref<Pagination> = ref({
       page: 1,
       size: 6,
-      sort: [],
+      sort: [/*{ key:'createdAt', order:'DESC' }*/],
     });
     const totalItems = ref(0);
     const isLastPage = ref(false);

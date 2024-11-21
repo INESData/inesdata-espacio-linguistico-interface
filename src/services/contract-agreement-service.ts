@@ -18,7 +18,7 @@ class ContractAgreementService {
 
   baseUrl = import.meta.env.VITE_APP_BACKEND_API_URL;
 
-  apiPath = this.baseUrl + '/v2/contractagreements';
+  apiPath = this.baseUrl + '/v3/contractagreements';
 
   private async toEntity(data: any): Promise<ContractAgreement> {
 

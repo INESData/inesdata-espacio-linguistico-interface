@@ -5,30 +5,22 @@
       v-model:page="paginationOptions.page"
       v-model:sort-by="paginationOptions.sort"
       :items-length="totalItems"
-      :items="negotiations"
+      :items="transfers"
       :loading="loading"
       item-value="name"
       @update:options="loadItems"
       :headers="headers"
       class="datatable"
     >
-      <template v-slot:[`item.asset`]="{ item }">
-        <span class="name" v-if="item.contractAgreement">
-          <span>{{ item.contractAgreement.asset.name }}</span>
-          <span class="asset-type">
-            {{ ' (' + $t('commons.' + item.contractAgreement.asset.type + '.' + item.contractAgreement.asset.type) + ')' }}
-          </span>
-        </span>
-      </template>
-      <template v-slot:[`item.creationDate`]="{ item }">
-        {{ new Date(item.creationDate).toLocaleString() }}
+      <template v-slot:[`item.stateDate`]="{ item }">
+        {{ new Date(item.stateDate).toLocaleString() }}
       </template>
       <template v-slot:[`item.status`]="{ item }">
         <v-chip
           :color="
-            item.status === NegotiationType.COMPLETED
+            item.status === 'COMPLETED'
               ? 'success'
-              : item.status === NegotiationType.REFUSED
+              : item.status === 'REFUSED'
               ? 'error'
               : 'warning'
           "
@@ -37,15 +29,7 @@
           {{ $t('console.negotiations-page.' + item.status) }}
         </v-chip>
       </template>
-      <template v-slot:[`item.actions`]="{ item }">
-        <div class="actions">
-          <v-btn variant="flat" density="comfortable" @click="showDetails(item)">
-            <v-icon icon="$eye"></v-icon>
-          </v-btn>
-        </div>
-      </template>
     </v-data-table-server>
-    <negotiation-modal ref="negotiationmodalref" @accepted="loadItems()" @refused="loadItems()" />
   </div>
 </template>
 
@@ -59,17 +43,14 @@ import { type SearchFilters } from '@/models/search-filters';
 import { FilterType } from '@/models/filter';
 import { onMounted } from 'vue';
 import { type Paginated } from '@/models/paginated';
-import { type Negotiation } from '@/models/negotiation';
 import userService from '@/services/user-service';
-import negotiationService from '@/services/negotiation-service';
-import { NegotiationType } from '@/models/negotiation-type';
-import NegotiationModal from './NegotiationModal.vue';
+import transferService from '@/services/transfer-service';
+import { type Transfer } from '@/models/transfer';
 
 export default defineComponent({
-  name: 'NegotiationsSent',
-  components: { NegotiationModal },
+  name: 'TransfersProvided',
   setup() {
-    const negotiations: Ref<Negotiation[]> = ref([]);
+    const transfers: Ref<Transfer[]> = ref([]);
     const { t } = useI18n();
     const headers: Ref<any> = ref([
       {
@@ -79,30 +60,29 @@ export default defineComponent({
         key: 'id',
       },
       {
-        title: t('console.asset-name'),
+        title: t('console.transfers-page.asset-id'),
         align: 'start',
         sortable: false,
-        key: 'asset',
+        key: 'assetId',
       },
-      /*{
-        title: t('console.owner'),
-        align: 'start',
-        sortable: false,
-        key: 'assetOwner.username',
-      },*/
       {
-        title: t('console.creation-date'),
+        title: t('console.transfers-page.contract-id'),
         align: 'start',
         sortable: false,
-        key: 'creationDate',
+        key: 'contractId',
+      },
+      {
+        title: t('console.last-updated'),
+        align: 'start',
+        sortable: false,
+        key: 'stateDate',
       },
       {
         title: t('console.status'),
         align: 'start',
         sortable: false,
-        key: 'status',
-      },
-      { title: '', key: 'actions', sortable: false },
+        key: 'state',
+      }
     ]);
     const filters: Ref<SearchFilters> = ref({
       query: {
@@ -121,11 +101,10 @@ export default defineComponent({
     const reqController = new AbortController();
     const reqSignal = reqController.signal;
     const loading = ref(true);
-    const negotiationmodalref = ref();
 
     const loadItems = async () => {
       reqController.abort();
-      negotiations.value = [];
+      transfers.value = [];
       isLastPage.value = false;
       loading.value = true;
       const searchFilters = {} as SearchFilters;
@@ -133,9 +112,9 @@ export default defineComponent({
         searchFilters[filter] = filters.value[filter].value;
       }
 
-      searchFilters.negotiationType = "CONSUMER";
-
-      const response: Paginated<Negotiation> = await negotiationService.search(
+      searchFilters.transferType = "PROVIDER";
+      
+      const response: Paginated<Transfer> = await transferService.search(
         userService.currentUser.id,
         paginationOptions.value,
         searchFilters,
@@ -145,13 +124,9 @@ export default defineComponent({
         totalItems.value = response.totalElements;
         totalPages.value = response.totalPages;
         isLastPage.value = response.last;
-        negotiations.value = response.content;
+        transfers.value = response.content;
       }
       loading.value = false;
-    };
-
-    const showDetails = (item: Negotiation) => {
-      negotiationmodalref.value.show(item.id);
     };
 
     onMounted(() => {
@@ -159,7 +134,7 @@ export default defineComponent({
     });
 
     return {
-      negotiations,
+      transfers,
       paginationOptions,
       totalItems,
       isLastPage,
@@ -167,10 +142,7 @@ export default defineComponent({
       loading,
       loadItems,
       headers,
-      showDetails,
       filters,
-      NegotiationType,
-      negotiationmodalref,
     };
   },
 });
