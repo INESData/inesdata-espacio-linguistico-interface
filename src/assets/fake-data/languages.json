@@ -1,14 +1,42 @@
 [
-  {
-    "id": 1,
-    "name": "en"
-  },
-  {
-    "id": 2,
-    "name": "es"
-  },
-  {
-    "id": 3,
-    "name": "it"
-  }
+  {"id": "1","name": "sq"},
+  {"id": "2","name": "eu"},
+  {"id": "3","name": "be"},
+  {"id": "4","name": "bs"},
+  {"id": "5","name": "bg"},
+  {"id": "6","name": "ca"},
+  {"id": "7","name": "hr"},
+  {"id": "8","name": "cs"},
+  {"id": "9","name": "da"},
+  {"id": "10","name": "nl"},
+  {"id": "11","name": "en"},
+  {"id": "12","name": "et"},
+  {"id": "13","name": "fi"},
+  {"id": "14","name": "fr"},
+  {"id": "15","name": "gd"},
+  {"id": "16","name": "gl"},
+  {"id": "17","name": "de"},
+  {"id": "18","name": "el"},
+  {"id": "19","name": "hu"},
+  {"id": "20","name": "is"},
+  {"id": "21","name": "ga"},
+  {"id": "22","name": "it"},
+  {"id": "23","name": "lv"},
+  {"id": "24","name": "lt"},
+  {"id": "25","name": "lb"},
+  {"id": "26","name": "mk"},
+  {"id": "27","name": "mt"},
+  {"id": "28","name": "no"},
+  {"id": "29","name": "pl"},
+  {"id": "30","name": "pt"},
+  {"id": "31","name": "ro"},
+  {"id": "32","name": "ru"},
+  {"id": "33","name": "sr"},
+  {"id": "34","name": "sk"},
+  {"id": "35","name": "sl"},
+  {"id": "36","name": "es"},
+  {"id": "37","name": "sv"},
+  {"id": "38","name": "tr"},
+  {"id": "39","name": "uk"},
+  {"id": "40","name": "cy"}
 ]
