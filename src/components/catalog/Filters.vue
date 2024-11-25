@@ -26,7 +26,7 @@
             ></v-text-field>
             <v-virtual-scroll
               :max-height="200"
-              :items="filter.options.filter((o: string) => o.toLocaleLowerCase().includes(searchString.toLocaleLowerCase()))"
+              :items="filter.options.filter((o: string) => getLabel(k, o).toLocaleLowerCase().includes(searchString.toLocaleLowerCase()))"
             >
               <template v-slot:default="{ item }">
                 <v-checkbox
@@ -53,6 +53,7 @@
 <script lang="ts">
 import { type SearchFilters } from '@/models/search-filters';
 import { defineComponent, type PropType, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'SearchFilters',
@@ -64,8 +65,18 @@ export default defineComponent({
   },
   setup() {
     const searchString = ref('');
+    const { t } = useI18n();
+    const { te } = useI18n();
 
-    return { searchString };
+    function getLabel(k: string | number, o: string): string {
+
+      if (te('catalog.filters.' + k + '.options.' + o))
+        return t('catalog.filters.' + k + '.options.' + o);
+      else
+        return o;
+    };
+
+    return { searchString, getLabel };
   },
 });
 </script>

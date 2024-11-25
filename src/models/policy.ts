@@ -7,7 +7,7 @@ export interface Policy {
   permissions: string;
   prohibitions: string;
   obligations: string;
-  type: PolicyType;
+  type: PolicyType[];
   user?: User;
   creationDate: number;
 }

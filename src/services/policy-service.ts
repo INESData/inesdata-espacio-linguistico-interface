@@ -31,14 +31,22 @@ class PolicyService extends DataService<Policy, SearchFilters> {
       permissions: '',
       prohibitions: '',
       obligations: '',
-      type: PolicyType.CONTRACT
+      type: []
     };
 
     if (data.privateProperties && data.privateProperties['name'])
       policy.name = data.privateProperties['name'];
 
-    if (data.privateProperties && data.privateProperties['policy_type'])
-      policy.type = data.privateProperties['policy_type'];
+    if (data.privateProperties && data.privateProperties['policy_type']) {
+      if (Array.isArray(data.privateProperties['policy_type'])) {
+        for (const policy_type of data.privateProperties['policy_type']) {
+          policy.type.push(policy_type);
+        }
+      }
+      else {
+        policy.type.push(data.privateProperties['policy_type']);
+      }
+    }
 
     if (data.policy['odrl:permission'])
       policy.permissions = JSON.stringify(data.policy['odrl:permission'], null, 2);
@@ -67,13 +75,19 @@ class PolicyService extends DataService<Policy, SearchFilters> {
         "odrl:obligation": []
       },
       privateProperties: {
-          "policy_type": entity.type,
+          "policy_type": [],
           "name": entity.name
       }
     }
 
     if (entity.id) {
       policyRequest["@id"] = entity.id;
+    }
+
+    if (entity.type) {
+      for (const type of entity.type) {
+        policyRequest.privateProperties.policy_type.push(type);
+      }
     }
 
     if (entity.permissions && entity.permissions != "[]")

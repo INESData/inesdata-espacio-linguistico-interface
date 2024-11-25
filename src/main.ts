@@ -29,6 +29,7 @@ async function initApp() {
 
 async function initFakeDb() {
   await indexeddb.init();
+  /*
   const currentUser = await indexeddb.getUser(2);
   userService.onUserProfileLoaded({
     email_verified: true,
@@ -36,6 +37,7 @@ async function initFakeDb() {
     id: currentUser.id,
     roles: [],
   } as unknown as User);
+  */
 }
 await initFakeDb();
 initApp();

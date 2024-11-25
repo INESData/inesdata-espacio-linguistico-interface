@@ -13,6 +13,27 @@
       <v-card :title="$t('console.contracts-page.policy-editor')">
         <v-card-text>
           <div class="mt-5">
+            <v-container fluid style="padding: 0;">
+              <v-row>
+                <v-col cols="4" style="padding-top: 0;">
+                  <v-checkbox v-model="policy.type"
+                    :label="$t('commons.policy.contract-policy')"
+                    :value="PolicyType.CONTRACT"
+                    :rules="[rules.checkbox_required]"
+                  />
+                </v-col>
+                <v-col cols="4" md="4" style="padding-top: 0;">
+                  <v-checkbox v-model="policy.type"
+                    :label="$t('commons.policy.access-policy')"
+                    :value="PolicyType.ACCESS"
+                    hide-details
+                    :rules="[rules.checkbox_required]"
+                  />
+                </v-col>
+              </v-row>
+            </v-container>
+            
+            <!--
             <v-radio-group v-model="policy.type" inline>
               <v-radio
                 density="compact"
@@ -25,6 +46,7 @@
                 :value="PolicyType.ACCESS"
               ></v-radio>
             </v-radio-group>
+            -->
             <v-text-field
               :label="$t('console.name')"
               :rules="[rules.required, rules.min]"
@@ -132,7 +154,7 @@ export default defineComponent({
       permissions: '',
       prohibitions: '',
       obligations: '',
-      type: PolicyType.CONTRACT,
+      type: [PolicyType.CONTRACT, PolicyType.ACCESS],
     } as Policy);
 
     const form = ref();
@@ -145,7 +167,7 @@ export default defineComponent({
         permissions: '',
         prohibitions: '',
         obligations: '',
-        type: PolicyType.CONTRACT,
+        type: [PolicyType.CONTRACT, PolicyType.ACCESS],
         creationDate: 0,
       };
       if (policyToEdit) {
@@ -159,7 +181,7 @@ export default defineComponent({
           permissions: '',
           prohibitions: '',
           obligations: '',
-          type: PolicyType.CONTRACT,
+          type: [PolicyType.CONTRACT, PolicyType.ACCESS],
           creationDate: 0,
         };
       }
@@ -179,6 +201,11 @@ export default defineComponent({
       catch (e) {
         return false;
       }
+    };
+
+    function validateCheckboxRequired(value: string[]) {
+      console.log("validateCheckboxRequired", value.length);
+      return value.length > 0 || t('commons.errors.required')
     }
 
     const isFormValid: Ref<boolean> = ref(true);
@@ -187,6 +214,7 @@ export default defineComponent({
       min: (value: string) =>
         (value && value.length >= 1) || t('commons.errors.field-too-short', { length: 1 }),
       json_valid: (value: string) => isValidJson(value) || t('commons.errors.json-invalid'),
+      checkbox_required: (value: string[]) => value.length > 0 || t('commons.errors.required')
     });
     async function submit() {
       await form.value?.validate();
@@ -233,6 +261,7 @@ export default defineComponent({
       isFormValid,
       loading,
       PolicyType,
+      validateCheckboxRequired
     };
   },
 });

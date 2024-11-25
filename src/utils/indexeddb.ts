@@ -39,7 +39,7 @@ class IndexedDb {
 
       request.onupgradeneeded = function (e) {
         const db = (e.target as any).result;
-
+        /*
         // Init assets
         const assetsStore = db.createObjectStore('assets', { keyPath: 'id', autoIncrement: true });
         assetsStore.createIndex('name', 'name', { unique: false });
@@ -86,14 +86,14 @@ class IndexedDb {
         negotiationsData.forEach((negotiation) => {
           negotiationsStore.add(negotiation);
         });
-
+        
         // Init Users
         const usersStore = db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
         const usersData = usersJson as unknown as User[];
         usersData.forEach((user) => {
           usersStore.add(user);
         });
-
+        */
         // Init Langs
         const langsStore = db.createObjectStore('langs', {
           keyPath: 'id',

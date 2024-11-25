@@ -212,8 +212,8 @@ export default defineComponent({
       );
       if (response) {
         const policies = response.content;
-        contractPolicies.value = policies.filter((p) => p.type === PolicyType.CONTRACT);
-        accessPolicies.value = policies.filter((p) => p.type === PolicyType.ACCESS);
+        contractPolicies.value = policies.filter((p) => p.type.includes(PolicyType.CONTRACT));
+        accessPolicies.value = policies.filter((p) => p.type.includes(PolicyType.ACCESS));
       }
 
       allAssets.value = [];
