@@ -128,11 +128,14 @@
         "languages": "Languages",
         "options": {
           "sq": "Albanian",
+          "ast": "Asturian",
           "eu": "Basque",
           "be": "Belarusian",
           "bs": "Bosnian",
+          "br": "Breton",
           "bg": "Bulgarian",
           "ca": "Catalan",
+          "co": "Corsican",
           "hr": "Croatian",
           "cs": "Czech",
           "da": "Danish",
@@ -166,7 +169,8 @@
           "sv": "Swedish",
           "tr": "Turkish",
           "uk": "Ukrainian",
-          "cy": "Welsh"
+          "cy": "Welsh",
+          "yi": "Yiddish"
         }
       },
       "licenses": {
