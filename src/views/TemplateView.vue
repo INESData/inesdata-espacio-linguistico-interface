@@ -1,5 +1,5 @@
 <template>
-  <div>Inesdata test view</div>
+  <div>INESData test view</div>
 </template>
 
 <script lang="ts">

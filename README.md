@@ -1,4 +1,4 @@
-# InesData FE
+# INESData FE
 ## Prerequisites
 Install Node.js (`https://nodejs.org/`) version 18.3 or higher.
 ### Install dependencies
@@ -7,7 +7,7 @@ To install all the packages and dependencies needed, you will need to execute:
 npm install
 ```
 ## Environment configuration
-Before running the frontend, you will need to modify some backend configuration values to point to your InesData connector environment. Those are stored in `.env` file, and
+Before running the frontend, you will need to modify some backend configuration values to point to your INESData connector environment. Those are stored in `.env` file, and
 by default contain the following:
 ```
 VITE_APP_BACKEND_API_URL='http://localhost:19193/management'

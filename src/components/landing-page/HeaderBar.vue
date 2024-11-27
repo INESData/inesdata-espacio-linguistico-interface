@@ -1,7 +1,7 @@
 <template>
   <v-app-bar class="header-bar" scroll-behavior="elevate" height="80">
     <v-app-bar-title>
-      <img class="logo" src="/icons/logo_1.svg" alt="Inesdata" height="40" />
+      <img class="logo" src="/icons/logo_1.svg" alt="INESData" height="40" />
       InesData
     </v-app-bar-title>
     <template v-slot:append>

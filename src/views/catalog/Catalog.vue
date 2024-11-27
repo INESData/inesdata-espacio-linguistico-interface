@@ -2,8 +2,10 @@
   <v-layout>
     <v-navigation-drawer permanent :rail="isMobile">
       <div class="logo">
-        <img class="logo" src="/icons/logo_1.svg" alt="InesData" height="40" />
-        <span class="ml-2" v-if="!isMobile">InesData</span>
+        <router-link :to="{ name: 'catalog' }" style="text-decoration: none; color: inherit;" :title="$t('commons.buttons.go-to-catalog')">
+          <img class="logo" src="/icons/logo_1.svg" alt="INESData" height="40" />
+          <span class="ml-2" v-if="!isMobile">INESData</span>
+        </router-link>
       </div>
       <div class="text-center mb-5 mt-3">
         <create-button v-if="!isMobile" size="large" />

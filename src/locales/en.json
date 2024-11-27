@@ -1,25 +1,25 @@
 {
   "commons": {
-    "app-title": "Inesdata Catalog",
+    "app-title": "INESData Catalog",
     "corpus": {
       "corpus": "Corpus",
       "corpus-s": "Corpus",
-      "corpus-description": "List of all the corpus datasets offered in the in the INESDATA language data space catalogue."
+      "corpus-description": "List of all the corpus datasets offered in the in the INESData language data space catalogue."
     },
     "service": {
       "service": "Services",
       "service-s": "Service",
-      "service-description": "List of all the services datasets offered in the in the INESDATA language data space catalogue."
+      "service-description": "List of all the services datasets offered in the in the INESData language data space catalogue."
     },
     "model": {
       "model": "Models",
       "model-s": "Model",
-      "model-description": "List of all the models offered in the in the INESDATA language data space catalogue."
+      "model-description": "List of all the models offered in the in the INESData language data space catalogue."
     },
     "lexical-resource": {
       "lexical-resource": "Lexical resources",
       "lexical-resource-s": "Lexical resources",
-      "lexical-resource-description": "List of all the lexical resources offered in the in the INESDATA language data space catalogue."
+      "lexical-resource-description": "List of all the lexical resources offered in the in the INESData language data space catalogue."
     },
     "contract": {
       "contract": "Contracts",
@@ -115,10 +115,11 @@
     "terms": "Terms",
     "about": "About",
     "about-value": "About value",
-    "about-value-site": "About value site"
+    "about-value-site": "About value site",
+    "others": "Others"
   },
   "catalog": {
-    "catalog-description": "Search and negotiate the available linguistic assets in the INESDATA language data space.",
+    "catalog-description": "Search and negotiate the available linguistic assets in the INESData language data space.",
     "clear-all": "Clear all",
     "no-results": "No results. Try changing filters",
     "created": "Created on {date}",

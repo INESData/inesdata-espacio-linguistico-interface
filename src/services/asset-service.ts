@@ -9,6 +9,8 @@ import axios from 'axios';
 import type { ContractOffer } from '@/models/contract-offer';
 import { DestinationType } from '@/models/destination-type';
 import type { DataDestination } from '@/models/data-destination';
+import langsJson from '@/assets/fake-data/languages.json';
+import type { Language } from '@/models/language';
 
 export interface AssetUpdate {
   id: string;
@@ -63,25 +65,25 @@ class SearchService extends DataService<Asset, SearchFilters> {
       asset.dataDestination.folder = data.dataAddress["folder"];
     }
 
-    if (data.properties['languages']) {
-      if (Array.isArray(data.properties['languages'])) {
-        for (const lang of data.properties['languages']) {
+    if (data.properties.assetData && data.properties.assetData['languages']) {
+      if (Array.isArray(data.properties.assetData['languages'])) {
+        for (const lang of data.properties.assetData['languages']) {
           asset.languages.push(lang);
         }
       }
       else {
-        asset.languages.push(data.properties['languages']);
+        asset.languages.push(data.properties.assetData['languages']);
       }
     }
     
-    if (data.properties['categories']) {
-      if (Array.isArray(data.properties['categories'])) {
-        for (const cat of data.properties['categories']) {
+    if (data.properties.assetData && data.properties.assetData['categories']) {
+      if (Array.isArray(data.properties.assetData['categories'])) {
+        for (const cat of data.properties.assetData['categories']) {
           asset.categories.push(cat);
         }
       }
       else {
-        asset.categories.push(data.properties['categories']);
+        asset.categories.push(data.properties.assetData['categories']);
       }
     }
     
@@ -100,9 +102,11 @@ class SearchService extends DataService<Asset, SearchFilters> {
         "assetType": entity.type,
         "shortDescription": entity.description,
         "dcterms:description": entity.textContent,
-        "languages": [],
-        "categories": [],
-        "contenttype": entity.contenttype
+        "contenttype": entity.contenttype,
+        "assetData": {
+          "languages": [],
+          "categories": []
+        }
       },
       dataAddress: {
         "type": entity.dataDestination.type
@@ -133,13 +137,13 @@ class SearchService extends DataService<Asset, SearchFilters> {
 
     if (entity.languages) {
       for (const lang of entity.languages) {
-        assetRequest.properties.languages.push(lang);
+        assetRequest.properties.assetData.languages.push(lang);
       }
     }
 
     if (entity.categories) {
       for (const category of entity.categories) {
-        assetRequest.properties.categories.push(category);
+        assetRequest.properties.assetData.categories.push(category);
       }
     }
 
@@ -207,6 +211,61 @@ class SearchService extends DataService<Asset, SearchFilters> {
     return success;
   }
 
+  async getCatalogStatisticsByLang(assetType: string, t: any): Promise<any> {
+
+    let topNLang = 7;
+
+    const searchFilters = {} as SearchFilters;
+    searchFilters["type"] = assetType;
+
+    const countTotal = await this.doCatalogSearchCountRequest(searchFilters);
+
+    const langs: string[] = [];
+    const langsData = langsJson as unknown as Language[];
+    langsData.forEach((lang) => {
+      langs.push(lang.name);
+    });
+
+    let statisticsByLang = [];    
+
+    for (var lang of langs) {
+
+      const searchFiltersByLang = {} as SearchFilters;
+      searchFiltersByLang["type"] = assetType;
+      searchFiltersByLang["languages"] = [lang];
+
+      const countByLang = await this.doCatalogSearchCountRequest(searchFiltersByLang);
+
+      let statistics = {
+        name: t('catalog.filters.languages.options.' + lang),
+        count: countByLang
+      };
+      statisticsByLang.push(statistics);
+    }
+
+    statisticsByLang.sort((a,b) => (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0));
+
+    let totalOthers = 0;
+    for (let i=topNLang; i < statisticsByLang.length; i=i+1) {
+      totalOthers = totalOthers + statisticsByLang[i].count;
+    }
+
+    statisticsByLang.splice(topNLang, statisticsByLang.length);
+
+    let statisticsOthers = {
+      name: t('landing-page.others'),
+      count: (totalOthers)
+    };
+    statisticsByLang.push(statisticsOthers);
+
+    const statistics = {
+      countTotal: countTotal,
+      statisticsByLang: statisticsByLang
+    };
+
+    return statistics;
+  }
+
   async readFromCatalog(id: string): Promise<Asset> {
 
     const searchFilters = {} as SearchFilters;
@@ -230,47 +289,7 @@ class SearchService extends DataService<Asset, SearchFilters> {
 
     let results = await this.doCatalogSearchRequest(pagination, filters);
 
-    if (filters && filters.languages && filters.languages.length > 0) {
-      results = results.filter((asset) => this.containsLangs(asset, filters.languages));
-    }
-
-    if (filters && filters.categories && filters.categories.length > 0) {
-      results = results.filter((asset) => this.containsCategories(asset, filters.categories));
-    }
-
     return this.buildReturnData(results, pagination, totalResultsCount);
-  }
-
-  private containsLangs(asset: Asset, langs: string[]): boolean {
-    for (const lang of langs) {
-      if (!this.containsLang(asset, lang))
-        return false;
-    }
-    return true;
-  }
-
-  private containsLang(asset: Asset, lang: string): boolean {
-    for (const l of asset.languages) {
-      if (l.name == lang)
-        return true;
-    }
-    return false;
-  }
-
-  private containsCategories(asset: Asset, categories: string[]): boolean {
-    for (const cat of categories) {
-      if (!this.containsCategory(asset, cat))
-        return false;
-    }
-    return true;
-  }
-
-  private containsCategory(asset: Asset, category: string): boolean {
-    for (const c of asset.categories) {
-      if (c.name == category)
-        return true;
-    }
-    return false;
   }
 
   private async doCatalogSearchRequest(pagination: Pagination | undefined, filters?: SearchFilters): Promise<Asset[]> {
@@ -370,8 +389,29 @@ class SearchService extends DataService<Asset, SearchFilters> {
           "operandRight": filters.type
         };
         filterExpression.push(filter);
-      }      
+      }
 
+      if (filters.languages && filters.languages.length > 0) {
+        for (const lang of filters.languages) {
+          let filter = {
+            "operandLeft": "'https://w3id.org/edc/v0.0.1/ns/assetData'.'https://w3id.org/edc/v0.0.1/ns/languages'.'https://w3id.org/edc/v0.0.1/ns/name'",
+            "operator": "=",
+            "operandRight": lang
+          };
+          filterExpression.push(filter);
+        }
+      }
+
+      if (filters.categories && filters.categories.length > 0) {
+        for (const category of filters.categories) {
+          let filter = {
+            "operandLeft": "'https://w3id.org/edc/v0.0.1/ns/assetData'.'https://w3id.org/edc/v0.0.1/ns/categories'.'https://w3id.org/edc/v0.0.1/ns/name'",
+            "operator": "=",
+            "operandRight": category
+          };
+          filterExpression.push(filter);
+        }
+      }
     }
 
     return filterExpression;
@@ -415,25 +455,25 @@ class SearchService extends DataService<Asset, SearchFilters> {
       dataDestination: {} as DataDestination
     };
 
-    if (catalogAsset['languages']) {
-      if (Array.isArray(catalogAsset['languages'])) {
-        for (const lang of catalogAsset['languages']) {
+    if (catalogAsset.assetData && catalogAsset.assetData['languages']) {
+      if (Array.isArray(catalogAsset.assetData['languages'])) {
+        for (const lang of catalogAsset.assetData['languages']) {
           asset.languages.push(lang);
         }
       }
       else {
-        asset.languages.push(catalogAsset['languages']);
+        asset.languages.push(catalogAsset.assetData['languages']);
       }
     }
     
-    if (catalogAsset['categories']) {
-      if (Array.isArray(catalogAsset['categories'])) {
-        for (const cat of catalogAsset['categories']) {
+    if (catalogAsset.assetData && catalogAsset.assetData['categories']) {
+      if (Array.isArray(catalogAsset.assetData['categories'])) {
+        for (const cat of catalogAsset.assetData['categories']) {
           asset.categories.push(cat);
         }
       }
       else {
-        asset.categories.push(catalogAsset['categories']);
+        asset.categories.push(catalogAsset.assetData['categories']);
       }
     }
 

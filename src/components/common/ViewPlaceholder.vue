@@ -8,6 +8,9 @@
       <v-icon size="55" class="mb-3" v-if="$props.icon">{{ $props.icon }}</v-icon>
       <h1 class="mb-3" v-if="$props.title">{{ $props.title }}</h1>
       <p class="text" v-if="$props.text">{{ $props.text }}</p>
+
+      <Statistics v-if="$props.title"></Statistics>
+
       <v-btn v-if="$props.button" class="primary mt-5" @click="onClick()">
         {{ $props.button }}
       </v-btn>
@@ -17,9 +20,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Statistics from '@/components/catalog/Statistics.vue';
 
 export default defineComponent({
   name: 'ViewPlaceholder',
+  components: { Statistics },
   emits: ['onclick'],
   props: {
     title: {
@@ -45,6 +50,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+
     const onClick = () => {
       emit('onclick');
     };
