@@ -2,9 +2,9 @@
   "commons": {
     "app-title": "INESData Catalog",
     "corpus": {
-      "corpus": "Corpus",
+      "corpus": "Corpora",
       "corpus-s": "Corpus",
-      "corpus-description": "List of all the corpus datasets offered in the in the INESData language data space catalogue."
+      "corpus-description": "List of all corpora offered in the in the INESData language data space catalogue."
     },
     "service": {
       "service": "Services",
