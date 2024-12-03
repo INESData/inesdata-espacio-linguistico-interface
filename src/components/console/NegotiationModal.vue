@@ -160,7 +160,7 @@
               class="primary mr-2"
               min-width="350px"
               @click="startTransfer()"
-              :disabled="transferInProgress"
+              :disabled="transferInProgress || allowDownload"
             >
               {{ $t('commons.buttons.transfer') }}
             </v-btn>
