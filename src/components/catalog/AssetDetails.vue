@@ -22,6 +22,11 @@
     <v-row>
       <v-col cols="9">
         <div style="padding: 2px 0;">
+          <v-icon icon="$fileDocumentOutline" />
+          <span style="padding: 0 5px;">{{ $t('console.version') }}:</span>
+          <span style="font-size: 14px;">{{ $props.asset?.version }}</span>
+        </div>
+        <div style="padding: 2px 0;">
           <v-icon icon="$link" />
           <span style="padding: 0 5px;">{{ $t('catalog.originator') }}:</span>
           <span style="font-size: 14px;">{{ $props.asset?.originator }}</span>

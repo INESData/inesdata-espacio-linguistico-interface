@@ -204,7 +204,6 @@ export default defineComponent({
     };
 
     function validateCheckboxRequired(value: string[]) {
-      console.log("validateCheckboxRequired", value.length);
       return value.length > 0 || t('commons.errors.required')
     }
 

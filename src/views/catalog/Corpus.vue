@@ -1,8 +1,8 @@
 <template>
   <Search
-    :title="title"
+    :title="$t('commons.corpus.corpus')"
     icon="$folderTextOutline"
-    :description="description"
+    :description="$t('commons.corpus.corpus-description')"
     :searchFilters="filters"
   />
 </template>
@@ -24,8 +24,6 @@ export default defineComponent({
   setup() {
     const { t } = useI18n();
 
-    const title = t('commons.corpus.corpus');
-    const description = t('commons.corpus.corpus-description');
     const filters: Ref<SearchFilters> = ref({
       query: {
         type: FilterType.SEARCH,
@@ -58,7 +56,7 @@ export default defineComponent({
       filters.value.categories.options = (await categoryService.readAll()).map((l) => l.name);
     };
 
-    return { title, description, filters };
+    return { filters };
   },
 });
 </script>

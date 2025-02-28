@@ -17,14 +17,12 @@
           :title="$t('commons.corpus.corpus')"
           :active="$route.meta.parent === 'corpus'"
         ></v-list-item>
-        <!--
         <v-list-item
           :to="{ name: 'services' }"
           prepend-icon="$cogPlayOutline"
           :title="$t('commons.service.service')"
           :active="$route.meta.parent === 'services'"
         ></v-list-item>
-        -->
         <v-list-item
           :to="{ name: 'models' }"
           prepend-icon="$axisArrow"
@@ -68,7 +66,7 @@
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-main style="min-height: 100vh">
+    <v-main style="min-height: 100vh">      
       <view-placeholder
         :title="$t('commons.app-title')"
         image="./icons/logo_1.svg"
@@ -91,6 +89,8 @@ import checkMobile from '@/utils/utils';
 import { type RouteRecordRaw, useRoute, useRouter } from 'vue-router';
 import { onMounted } from 'vue';
 import CreateButton from '@/components/common/CreateButton.vue';
+import { useI18n } from 'vue-i18n'
+import userService from '@/services/user-service';
 
 export default defineComponent({
   name: 'CatalogView',
@@ -100,6 +100,8 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const routeChildren: Ref<RouteRecordRaw[]> = ref([]);
+
+    const { locale } = useI18n();
 
     onMounted(() => {
       let children: RouteRecordRaw[] = [];
@@ -111,7 +113,7 @@ export default defineComponent({
       routeChildren.value = children;
     });
 
-    return { isMobile, routeChildren };
+    return { isMobile, routeChildren, locale };
   },
 });
 </script>
@@ -126,6 +128,11 @@ export default defineComponent({
   & img {
     height: 40px;
   }
+}
+
+.link-clickable {
+  text-decoration: none;
+  color: inherit;
 }
 
 :deep(nav.v-navigation-drawer) {

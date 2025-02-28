@@ -156,13 +156,21 @@
               {{ $t('commons.buttons.pending') }}
             </v-btn>
             <v-btn
-              v-else-if="negotiation.status === NegotiationType.COMPLETED"
+              v-else-if="negotiation.status === NegotiationType.COMPLETED && negotiation.contractAgreement?.asset.type != EntityType.SERVICE"
               class="primary mr-2"
               min-width="350px"
               @click="startTransfer()"
               :disabled="transferInProgress || allowDownload"
             >
               {{ $t('commons.buttons.transfer') }}
+            </v-btn>
+            <v-btn
+              v-else-if="negotiation.status === NegotiationType.COMPLETED && negotiation.contractAgreement?.asset.type == EntityType.SERVICE"
+              class="primary mr-2"
+              min-width="350px"
+              @click="showExecuteServiceModal()"
+            >
+              {{ $t('console.transfers-page.operations.execute-service') }}
             </v-btn>
             <v-btn
               v-else-if="negotiation.status === NegotiationType.REFUSED"
@@ -189,7 +197,7 @@
 
           </v-card-actions>
 
-          <v-card-item v-if="transferInProgress" style="margin-bottom: 20px;">
+          <v-card-item v-if="transferInProgress || downloadInProgress" style="margin-bottom: 20px;">
             <v-progress-linear
               color="yellow-darken-2"
               indeterminate
@@ -200,6 +208,7 @@
       </v-card>
     </template>
   </v-dialog>
+  <execute-service-modal ref="executeServiceModalRef" />
   <policy-details-field-modal ref="policydetailsfieldmodalRef" />
   <confirm-modal ref="confirmmodalref" />
 </template>
@@ -214,6 +223,8 @@ import { NegotiationType } from '@/models/negotiation-type';
 import ConfirmModal, { type ConfirmModalExpose } from '@/components/common/Confirm.vue';
 import notifications from '@/utils/notifications';
 import transferService from '@/services/transfer-service';
+import { EntityType } from '@/models/resource-type';
+import ExecuteServiceModal from '../common/ExecuteServiceModal.vue';
 
 type ViewDialogs = {
   show: boolean;
@@ -221,7 +232,7 @@ type ViewDialogs = {
 
 export default defineComponent({
   name: 'NegotiationModal',
-  components: { PolicyDetailsFieldModal, ConfirmModal },
+  components: { PolicyDetailsFieldModal, ConfirmModal, ExecuteServiceModal },
   emits: ['accepted', 'refused'],
   setup(props, { emit }) {
     const { t } = useI18n();
@@ -251,7 +262,13 @@ export default defineComponent({
       policydetailsfieldmodalRef.value.show(title, text);
     };
 
+    const executeServiceModalRef = ref();
+    const showExecuteServiceModal = () => {
+      executeServiceModalRef.value.show(negotiation.value?.contractAgreement, negotiation.value?.counterPartyAddress);
+    };
+
     const transferInProgress = ref(false);
+    const downloadInProgress = ref(false);
     const allowDownload = ref(false);
     const transferId = ref();
     const startTransfer = async () => {
@@ -281,7 +298,7 @@ export default defineComponent({
         notification.success({
           type: 'success',
           title: '',
-          message: 'Transfer completed',
+          message: t('console.transfers-page.operations.transfer-completed'),
         });
 
         transferId.value = transfer["@id"];
@@ -289,17 +306,25 @@ export default defineComponent({
         allowDownload.value = true;
 
       }
-      else {
-
-        //TODO
-      }
 
       transferInProgress.value = false;
     };
 
     const downloadFile = async () => {
 
+      downloadInProgress.value = true;
+
       await transferService.downloadFile(transferId.value, negotiation.value?.contractAgreement?.asset.id!);
+
+      await transferService.terminateTransfer(transferId.value);
+      downloadInProgress.value = false;
+      allowDownload.value = false;
+
+      notification.success({
+          type: 'success',
+          title: '',
+          message: t('console.transfers-page.operations.download-completed'),
+        });
     };
 
     const { notification } = notifications();
@@ -355,8 +380,12 @@ export default defineComponent({
       refuseProposal,
       confirmmodalref,
       transferInProgress,
+      downloadInProgress,
       allowDownload,
-      downloadFile
+      downloadFile,
+      EntityType,
+      executeServiceModalRef,
+      showExecuteServiceModal
     };
   },
 });

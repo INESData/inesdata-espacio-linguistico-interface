@@ -54,7 +54,7 @@ docker build --tag inesdata-fe-app-con1 .
 ```
 4) Run the Docker image inside a container
 ```shell
-docker run -p 8090:80 -d inesdata-fe-app-con1
+docker run --name inesdata-con1-fe -p 8090:80 -d inesdata-fe-app-con1
 ```
 At this point, the UI for the Connector 1 will be available at `http://localhost:8090/dataspace/`.
 ### Configure the Connector 2 FE instance:
@@ -72,6 +72,6 @@ docker build --tag inesdata-fe-app-con2 .
 ```
 4) Run the Docker image inside a container:
 ```shell
-docker run -p 18090:80 -d inesdata-fe-app-con2
+docker run --name inesdata-con2-fe  -p 18090:80 -d inesdata-fe-app-con2
 ```
 At this point, the UI for the Connector 2 will be available at `http://localhost:18090/dataspace/`.

@@ -36,9 +36,11 @@ class SearchService extends DataService<Asset, SearchFilters> {
     const asset:Asset = {
       id: data['@id'],
       name: data.properties['name'],
+      version: data.properties['version'],
       type: data.properties['assetType'],
       description: data.properties['shortDescription'],
       textContent: data.properties['http://purl.org/dc/terms/description'],
+      keywords: data.properties['http://www.w3.org/ns/dcat#keyword'],
       creationDate: data.properties['created_at'],
       languages: [],
       categories: [],
@@ -96,12 +98,15 @@ class SearchService extends DataService<Asset, SearchFilters> {
       "@context": {
         "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
         "dcterms":"http://purl.org/dc/terms/",
+        "dcat":"http://www.w3.org/ns/dcat#"
       },
       properties: {
         "name": entity.name,
+        "version": entity.version,
         "assetType": entity.type,
         "shortDescription": entity.description,
         "dcterms:description": entity.textContent,
+        "dcat:keyword": entity.keywords,
         "contenttype": entity.contenttype,
         "assetData": {
           "languages": [],
@@ -117,6 +122,10 @@ class SearchService extends DataService<Asset, SearchFilters> {
       assetRequest.dataAddress["name"] = entity.name;
       assetRequest.dataAddress["baseUrl"] = entity.dataDestination.baseUrl;
       assetRequest.dataAddress["proxyPath"] = "true";
+
+      if (entity.type == EntityType.SERVICE) {
+        assetRequest.properties.assetData["serviceEnpoint"] = entity.dataDestination.baseUrl;
+      }
     }
     else if (entity.dataDestination.type == DestinationType.AmazonS3) {
       assetRequest.dataAddress["region"] = entity.dataDestination.region;
@@ -226,7 +235,7 @@ class SearchService extends DataService<Asset, SearchFilters> {
       langs.push(lang.name);
     });
 
-    let statisticsByLang = [];    
+    let statisticsByLang = [];
 
     for (var lang of langs) {
 
@@ -441,6 +450,7 @@ class SearchService extends DataService<Asset, SearchFilters> {
     const asset:Asset = {
       id: catalogAsset['@id'],
       name: catalogAsset['name'],
+      version: catalogAsset['version'],
       type: catalogAsset['assetType'],
       description: catalogAsset['shortDescription'],
       textContent: catalogAsset['http://purl.org/dc/terms/description'],
@@ -475,6 +485,10 @@ class SearchService extends DataService<Asset, SearchFilters> {
       else {
         asset.categories.push(catalogAsset.assetData['categories']);
       }
+    }
+
+    if (catalogAsset.assetData && catalogAsset.assetData['serviceEnpoint']) {
+        asset.serviceEndpoint = catalogAsset.assetData['serviceEnpoint'];
     }
 
     if (catalogAsset["odrl:hasPolicy"]) {

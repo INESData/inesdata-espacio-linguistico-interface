@@ -28,14 +28,12 @@
         :title="$t('commons.corpus.corpus-s')"
         :active="false"
       ></v-list-item>
-      <!--
       <v-list-item
         :to="{ name: 'asset-create', params: { type: EntityType.SERVICE } }"
         prepend-icon="$cogPlayOutline"
         :title="$t('commons.service.service-s')"
         :active="false"
       ></v-list-item>
-      -->
       <v-list-item
         :to="{ name: 'asset-create', params: { type: EntityType.MODEL } }"
         prepend-icon="$axisArrow"

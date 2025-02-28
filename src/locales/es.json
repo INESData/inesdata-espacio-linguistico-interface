@@ -1,1 +1,274 @@
-{}
+{
+    "commons": {
+      "app-title": "Catálogo INESData",
+      "corpus": {
+        "corpus": "Corpora",
+        "corpus-s": "Corpus",
+        "corpus-description": "Listado de todos los corpora ofrecidos en el catálogo del espacio de datos de INESData."
+      },
+      "service": {
+        "service": "Servicios",
+        "service-s": "Servicio",
+        "service-description": "Listado de todos los servicios ofrecidos en el catálogo del espacio de datos de INESData."
+      },
+      "model": {
+        "model": "Modelos",
+        "model-s": "Modelo",
+        "model-description": "Listado de todos los modelos ofrecidos en el catálogo del espacio de datos de INESData."
+      },
+      "lexical-resource": {
+        "lexical-resource": "Recursos léxicos",
+        "lexical-resource-s": "Recurso léxico",
+        "lexical-resource-description": "Listado de todos los recursos léxicos ofrecidos en el catálogo del espacio de datos de INESData."
+      },
+      "contract": {
+        "contract": "Contratos",
+        "contract-s": "Contrato",
+        "contract-description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse posuere ipsum odio, sed maximus dui lobortis sit amet. Vivamus ac condimentum tellus, id tempus urna. Nullam ut pellentesque diam."
+      },
+      "policy": {
+        "policy": "Políticas",
+        "policy-s": "Política",
+        "policy-description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse posuere ipsum odio, sed maximus dui lobortis sit amet. Vivamus ac condimentum tellus, id tempus urna. Nullam ut pellentesque diam.",
+        "contract-policy": "Política de contrato",
+        "access-policy": "Política de acceso"
+      },
+      "account": {
+        "account": "Cuenta",
+        "logout": "Salir"
+      },
+      "console": {
+        "console": "Mi consola",
+        "overview": "Visión General",
+        "overview-description": "Aquí puede crear y administrar sus activos, sus políticas y definiciones de contratos, y revisar sus negociaciones y acuerdos contractuales.",
+        "assets": "Activos",
+        "assets-description": "Los activos son recursos lingüísticos que incluyen corpus (anotados o no), recursos léxicos o modelos previamente entrenados.",
+        "policies": "Políticas",
+        "contracts": "Contratos",
+        "contracts-description": "Una Definición de Contrato especifica la política de acceso a un activo de datos y la política de uso: deberes, reglas y obligaciones que uno debe seguir.",
+        "negotiations": "Negociaciones",
+        "negotiations-description": "Aquí puede revisar todas sus negociaciones de ofertas de contratos.",
+        "transfer-history": "Historial de Transferencias",
+        "transfer-history-description": "Aquí puede revisar todo su historial de transferencia de activos."
+      },
+      "locales": {
+        "language": "Idioma",
+        "EN": "Inglés",
+        "ES": "Español",
+        "IT": "Italiano"
+      },
+      "operations": {
+        "unsaved": {
+          "title":
+            "Cambios no guardados",
+          "message":
+            "¿Realmente quieres salir de esta sección?"
+        },
+        "delete": {
+          "title": {
+            "single":"Eliminar"
+          },
+          "message": {
+            "single": "¿Estás seguro de que quieres eliminar?"
+          }
+        },
+        "deleted": "Eliminado",
+        "created": "Creado",
+        "updated": "Actualizado"
+      },
+      "buttons": {
+        "go-to-catalog": "Catálogo",
+        "delete": "Eliminar",
+        "import": "Importar",
+        "export": "Exportar",
+        "save": "Guardar",
+        "close": "Cerrar",
+        "cancel": "Cancelar",
+        "confirm": "Confirmar",
+        "add": "Añadir",
+        "create": "Crear",
+        "accept": "Aceptar",
+        "refuse": "Rechazar",
+        "accepted": "Aceptada",
+        "refused": "Rechazada",
+        "download": "Descargar",
+        "pending": "Pendiente",
+        "negotiate": "Negociar",
+        "transfer": "Transferir",
+        "execute": "Ejecutar"
+      },
+      "errors": {
+        "server": {
+          "ERROR": "Error",
+          "GENERIC_SERVER_ERROR": "Se produjo un error al comunicarse con la API"
+        },
+        "required": "El campo no debe estar vacío",
+        "field-too-short": "El campo debe tener al menos {length} caracteres",
+        "field-too-long": "El campo debe tener un máximo de {length} caracteres",
+        "field-must-length": "El campo debe tener {length} caracteres",
+        "json-invalid": "JSON no válido"
+      },
+      "back": "Atrás"
+    },
+    "landing-page": {
+      "main-title": "Lorem ipsum",
+      "main-subtitle": "Subtitle",
+      "contacts": "Contacts",
+      "terms": "Términos",
+      "about": "Acerca de",
+      "about-value": "About value",
+      "about-value-site": "About value site",
+      "others": "Otros"
+    },
+    "catalog": {
+      "catalog-description": "Busca y negocia los activos lingüísticos disponibles en el espacio de datos de INESData.",
+      "clear-all": "Eliminar todos",
+      "no-results": "Sin resultados. Prueba a cambiar los filtros",
+      "created": "Creado en {date}",
+      "originator": "Originator",
+      "filters": {
+        "languages": {
+          "languages": "Idiomas",
+          "options": {
+            "sq": "Albanés",
+            "ast": "Asturiano",
+            "eu": "Vasco",
+            "be": "Bielorruso",
+            "bs": "Bosnio",
+            "br": "Bretón",
+            "bg": "Búlgaro",
+            "ca": "Catalán",
+            "co": "Corso",
+            "hr": "Croata",
+            "cs": "Checo",
+            "da": "Danés",
+            "nl": "Holandés",
+            "en": "Inglés",
+            "et": "Estonio",
+            "fi": "Finlandés",
+            "fr": "Francés",
+            "gd": "Gaélico",
+            "gl": "Gallego",
+            "de": "Alemán",
+            "el": "Griego",
+            "hu": "Húngaro",
+            "is": "Islandés",
+            "ga": "Irlandés",
+            "it": "Italiano",
+            "lv": "Letón",
+            "lt": "Lituano",
+            "lb": "Luxemburgués",
+            "mk": "Macedonio",
+            "mt": "Maltés",
+            "no": "Noruego",
+            "pl": "Polaco",
+            "pt": "Portugués",
+            "ro": "Rumano",
+            "ru": "Ruso",
+            "sr": "Serbio",
+            "sk": "Eslovaco",
+            "sl": "Esloveno",
+            "es": "Español",
+            "sv": "Sueco",
+            "tr": "Turco",
+            "uk": "Ucraniano",
+            "cy": "Galés",
+            "yi": "Yidis"
+          }
+        },
+        "licenses": {
+          "licenses": "Licencias"
+        },
+        "categories": {
+          "categories": "Categorías"
+        }
+      },
+      "overview": "Visión General",
+      "contents": "Contenidos",
+      "contracts": "Contratos"
+    },
+    "console": {
+      "id": "Id",
+      "name": "Nombre",
+      "version": "Versión",
+      "keywords": "Palabras clave",
+      "creation-date": "Fecha de creación",
+      "last-updated": "Última actualización",
+      "short-description": "Descripción breve",
+      "languages": "Idiomas",
+      "categories": "Categorías",
+      "contracts": "Contratos",
+      "policy-content": "Contenido",
+      "policy-permissions": "Permisos",
+      "policy-prohibitions": "Prohibiciones",
+      "policy-obligations": "Obligaciones",
+      "asset-type": "Tipo de activo",
+      "asset-name": "Nombre del activo",
+      "proposal-creation-date": "Fecha de creación de la propuesta",
+      "acquirer": "Adquiridor",
+      "owner": "Propietario del activo",
+      "status": "Estado",
+      "asset-info": "Información del activo",
+      "contents": "Contenidos",
+      "text-content": "Contenido",
+      "destination": "Destino",
+      "base-url": "Base URL",
+      "region": "Región",
+      "bucket-name": "Nombre del bucket",
+      "key-name": "Nombre clave",
+      "content-type": "Tipo de contenido",
+      "file-to-upload": "Archivo para cargar",
+      "folder": "Carpeta",
+      "no-contract-assets-warning": "Hay activos sin al menos un contrato, que quedarán ocultos en la búsqueda.",
+      "no-contract-asset-warning": "Los activos sin al menos un contrato se ocultarán de la búsqueda",
+      "filters": {
+        "all": "Todos"
+      },
+      "contracts-page": {
+        "assets-count": "{count} activos",
+        "policy-editor": "Editor de políticas",
+        "contract-editor": "Editor de contratos"
+      },
+      "operations": {
+        "select-contracts": "Selecciona contratos",
+        "select-assets": "Selecciona activos"
+      },
+      "negotiations-page": {
+        "proposal-received": "Propuestas recibidas",
+        "proposal-sent": "Propuestas enviadas",
+        "proposal-accepted": "Propuestas aceptadas",
+        "proposal-refused": "Propuestas rechazadas",
+        "PENDING": "Pendiente",
+        "COMPLETED": "Completada",
+        "REFUSED": "Rechazada",
+        "negotiation-modal": {
+          "title": "Negociación {id}"
+        },
+        "operations": {
+          "accept-proposal": {
+            "title": "Aceptar propuesta",
+            "message": "¿Realmente quieres aceptar esta propuesta?"
+          },
+          "refuse-proposal": {
+            "title": "Rechazar propuesta",
+            "message": "¿Realmente quieres rechazar esta propuesta?"
+          }
+        }
+      },
+      "transfers-page": {
+        "consumer": "Consumidor",
+        "provided": "Proveedor",
+        "asset-id": "Id Activo",
+        "contract-id": "Id Contrato",
+        "execute-service-title": "Ejecución del servicio",
+        "service-endpoint": "Endpoint del servicio",
+        "service-request": "Cuerpo de la solicitud (JSON)",
+        "operations": {
+          "execute-service": "Ejecutar Servicio",
+          "transfer-completed": "Transferencia completada",
+          "download-completed": "Descarga completada"
+        }
+      }
+    }
+  }
+  

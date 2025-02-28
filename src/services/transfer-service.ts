@@ -60,7 +60,7 @@ class TransferService extends DataService<Transfer, SearchFilters> {
       "assetId": assetId,
       "protocol": "dataspace-protocol-http",
       "transferType": "HttpData-PULL",
-      "managedResources": true
+      /*"managedResources": true*/
     };
 
     let url = this.apiPath;
@@ -88,13 +88,56 @@ class TransferService extends DataService<Transfer, SearchFilters> {
 
   }
 
-  async downloadFile(transferId: string, assetId: string) {
+  async terminateTransfer(transferId: string) {
 
-    console.log("assetId", assetId);
+    let url = this.apiPath + '/' + transferId + '/terminate';
+
+    var request: any = {
+      "@context": {
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+      },
+      "@type": "TerminateTransfer",
+      "reason": "Transfer finished"
+    };
+
+    const response = await axios.post(url, request);
+
+  }
+
+  async getTransferEndpoint(transferId: string) {
 
     let url = this.baseUrl + '/v3/edrs/' + transferId + '/dataaddress';
 
-    const response = await axios.get(url);
+    return await axios.get(url);
+  }
+
+  async executeServiceRequest(transferId: string, endpointUrl: string, jsonRequest: string) {
+
+    const endpointResponse = await this.getTransferEndpoint(transferId);
+
+    const authorization = endpointResponse.data["authorization"];
+    let serviceUrlPrefix = endpointResponse.data["endpoint"];
+
+    let requestConfig = {      
+      headers: {
+        'Authorization': authorization
+      },
+      responseType: 'json'
+    } as AxiosRequestConfig;
+
+    let serviceResponse:any;
+    await axios.post(serviceUrlPrefix + '/' + endpointUrl, JSON.parse(jsonRequest), requestConfig)
+    .then((response) => {
+      serviceResponse = response.data;
+    })
+    .catch((error) => { serviceResponse = {}});
+
+    return serviceResponse
+  }
+
+  async downloadFile(transferId: string, assetId: string) {
+
+    const response = await this.getTransferEndpoint(transferId);
 
     const authorization = response.data["authorization"];
     let downloadFileUrl = response.data["endpoint"];
@@ -105,10 +148,6 @@ class TransferService extends DataService<Transfer, SearchFilters> {
       },
       responseType: 'blob'
     } as AxiosRequestConfig;
-    
-    //TODO Test mode
-    downloadFileUrl = downloadFileUrl.replace("connector-c1", "localhost");
-    downloadFileUrl = downloadFileUrl.replace("connector-c2", "localhost");
 
     const responseFile = await axios.get(downloadFileUrl, requestConfig);
 

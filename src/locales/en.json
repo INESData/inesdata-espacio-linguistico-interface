@@ -34,7 +34,8 @@
       "access-policy": "Access policy"
     },
     "account": {
-      "account": "Account"
+      "account": "Account",
+      "logout": "Log out"
     },
     "console": {
       "console": "My console",
@@ -93,7 +94,8 @@
       "download": "Download",
       "pending": "Pending",
       "negotiate": "Negotiate",
-      "transfer": "Transfer"
+      "transfer": "Transfer",
+      "execute": "Execute"
     },
     "errors": {
       "server": {
@@ -188,6 +190,8 @@
   "console": {
     "id": "Id",
     "name": "Name",
+    "version": "Version",
+    "keywords": "Keywords",
     "creation-date": "Creation date",
     "last-updated": "Last updated",
     "short-description": "Short description",
@@ -255,7 +259,15 @@
       "consumer": "Consumer",
       "provided": "Provided",
       "asset-id": "Asset Id",
-      "contract-id": "Contract Id"
+      "contract-id": "Contract Id",
+      "execute-service-title": "Service execution",
+      "service-endpoint": "Service Endpoint",
+      "service-request": "Request body (JSON)",
+      "operations": {
+        "execute-service": "Execute Service",
+        "transfer-completed": "Transfer completed",
+        "download-completed": "Download completed"
+      }
     }
   }
 }

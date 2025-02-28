@@ -43,6 +43,18 @@
             />
           </v-col>
           <v-col cols="8">
+            <v-text-field
+              :label="$t('console.version')"
+              placeholder="1.0"
+              :rules="[rules.required, rules.min, rules.nameMax]"
+              variant="outlined"
+              density="compact"
+              autocomplete="off"
+              v-model.trim="asset.version"
+              id="input-asset-version"
+            />
+          </v-col>
+          <v-col cols="8">
             <v-textarea
               :label="$t('console.short-description')"
               :rules="[rules.required, rules.min, rules.descMax]"
@@ -67,6 +79,16 @@
           </v-col>
           <v-col cols="8" v-show="selectedTab === 1">
             <div>
+              <v-text-field
+                :label="$t('console.keywords')"
+                placeholder="blue,green,red"
+                :rules="[rules.required, rules.min, rules.nameMax]"
+                variant="outlined"
+                density="compact"
+                autocomplete="off"
+                v-model.trim="asset.keywords"
+                id="input-asset-keywords"
+              />
               <v-select
                 variant="outlined"
                 density="compact"
@@ -150,7 +172,7 @@
 
               <v-select
                 :label="$t('console.destination')"
-                :items="Object.values(DestinationType)"
+                :items="destinations"
                 :rules="[rules.required]"
                 variant="outlined"
                 density="compact"
@@ -270,6 +292,13 @@ export default defineComponent({
       contentTypes.push(contentTypeValue);
     }
 
+    let destinations: any[] = [];
+    for (const destinationType of Object.values(DestinationType)) {
+      const assetType = route.params.type as EntityType;
+      if (assetType != EntityType.SERVICE || destinationType == DestinationType.HttpData)
+        destinations.push(destinationType);
+    }
+
     const assetform = ref<HTMLFormElement | null>(null);
     const isFormValid: Ref<boolean> = ref(true);
 
@@ -320,9 +349,11 @@ export default defineComponent({
       if (route.name === 'asset-create') {
         asset.value = {
           name: '',
+          version: '',
           description: '',
           textContent: '',
           creationDate: 0,
+          keywords: '',
           languages: [],
           categories: [],
           type: route.params.type as EntityType,
@@ -453,6 +484,7 @@ export default defineComponent({
       searchLang,
       confirmmodal,
       DestinationType,
+      destinations,
       contentTypes
     };
   },

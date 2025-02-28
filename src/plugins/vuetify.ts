@@ -33,6 +33,8 @@ import {
   mdiCloseCircle,
   mdiMonitorArrowDownVariant,
   mdiContentPaste,
+  mdiFileDocumentOutline,
+  mdiLogout,
 } from '@mdi/js';
 
 const customLightTheme = {
@@ -87,6 +89,8 @@ export default createVuetify({
       closeCircle: mdiCloseCircle,
       monitorArrowDownVariant: mdiMonitorArrowDownVariant,
       contentPaste: mdiContentPaste,
+      fileDocumentOutline: mdiFileDocumentOutline,
+      logout: mdiLogout,
     },
     sets: {
       mdi,

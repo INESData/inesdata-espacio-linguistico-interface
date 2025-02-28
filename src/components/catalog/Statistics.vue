@@ -132,14 +132,26 @@ export default defineComponent({
     const lexicalResourcesByLang: Ref<any[]> = ref([]);
 
     const loadStatistics = async () => {
+      loadCorpusStatistics();
+      loadModelStatistics();
+      loadLexicalResourcesStatistics();
+    };
+
+    const loadCorpusStatistics = async () => {
       const corpusStatistics = await assetService.getCatalogStatisticsByLang("corpus", t);
       corpusNb.value = corpusStatistics.countTotal;
       corpusByLang.value = corpusStatistics.statisticsByLang;
       loadingCorpus.value = false;
+    };
+
+    const loadModelStatistics = async () => {
       const modelStatistics = await assetService.getCatalogStatisticsByLang("model", t);
       modelsNb.value = modelStatistics.countTotal;
       modelsByLang.value = modelStatistics.statisticsByLang;
       loadingModels.value = false;
+    };
+
+    const loadLexicalResourcesStatistics = async () => {
       const lexicalResourcesStatistics = await assetService.getCatalogStatisticsByLang("lexical_resource", t);
       lexicalResourcesNb.value = lexicalResourcesStatistics.countTotal;
       lexicalResourcesByLang.value = lexicalResourcesStatistics.statisticsByLang;

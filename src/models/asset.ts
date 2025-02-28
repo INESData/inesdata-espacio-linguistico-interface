@@ -9,9 +9,11 @@ import type { User } from './user';
 export interface Asset {
   id?: string;
   name: string;
+  version: string;
   description: string;
   textContent: string;
   creationDate?: number;
+  keywords?: string;
   languages: Language[];
   categories: Category[];
   user?: User;
@@ -24,5 +26,6 @@ export interface Asset {
   contenttype: string;
 
   dataDestination: DataDestination;
-  
+  serviceEndpoint?: string;
+
 }

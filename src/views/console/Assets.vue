@@ -186,10 +186,10 @@ export default defineComponent({
             label: t('commons.' + EntityType.CORPUS + '.' + EntityType.CORPUS),
             value: EntityType.CORPUS,
           },
-          /*{
+          {
             label: t('commons.' + EntityType.SERVICE + '.' + EntityType.SERVICE),
             value: EntityType.SERVICE,
-          },*/
+          },
           {
             label: t('commons.' + EntityType.MODEL + '.' + EntityType.MODEL),
             value: EntityType.MODEL,

@@ -1,4 +1,4 @@
-import { type KeycloakProfile /* , type KeycloakTokenParsed */ } from 'keycloak-js';
+import { type KeycloakLogoutOptions, type KeycloakProfile /* , type KeycloakTokenParsed */ } from 'keycloak-js';
 import { keycloak } from '@/main';
 import { i18n } from '@/plugins/i18n';
 import indexeddb from '@/utils/indexeddb';
@@ -43,15 +43,25 @@ class UserService {
       lastName: user.family_name, */
     };
 
-    this.initUserLang();
+    if (user.locale && (user.locale == 'es' || user.locale == 'en'))
+      this.setLanguage(user.locale.toUpperCase());
+    else
+      this.initUserLang();
   }
 
   get accessToken(): string | undefined {
     return keycloak.token;
   }
 
-  logout() {
-    keycloak.logout();
+  logout(redirectUrl?: string) {
+    if (redirectUrl) {
+      let options: KeycloakLogoutOptions = {
+        redirectUri: redirectUrl,
+      }
+      keycloak.logout(options);
+    }
+    else
+      keycloak.logout();    
   }
 
   async read(id: number): Promise<User> {

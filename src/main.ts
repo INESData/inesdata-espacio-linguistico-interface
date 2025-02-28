@@ -49,7 +49,7 @@ router.beforeEach(async (to, from, next) => {
         onLoad: 'login-required' as KeycloakOnLoad,
         scope: '',
         pkceMethod: 'S256',
-        redirectUri: window.location.origin + to.fullPath,
+        redirectUri: window.location.href,
       });
       if (!auth) {
         window.location.reload();
@@ -60,6 +60,7 @@ router.beforeEach(async (to, from, next) => {
       // await languageService.loadLanguages();
       const userProfile:any = await keycloak.loadUserInfo();
       userProfile.id = userProfile['sub'];
+      userProfile.locale = userProfile['locale'];
       userService.onUserProfileLoaded(userProfile as User);
       setInterval(async () => {
         try {

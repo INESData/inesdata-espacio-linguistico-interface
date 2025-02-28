@@ -1,8 +1,8 @@
 <template>
   <Search
-    :title="title"
+    :title="$t('commons.lexical-resource.lexical-resource')"
     icon="$textBoxOutline"
-    :description="description"
+    :description="$t('commons.lexical-resource.lexical-resource-description')"
     :searchFilters="filters"
   />
 </template>
@@ -23,8 +23,6 @@ export default defineComponent({
   setup() {
     const { t } = useI18n();
 
-    const title = t('commons.lexical-resource.lexical-resource');
-    const description = t('commons.lexical-resource.lexical-resource-description');
     const filters: Ref<SearchFilters> = ref({
       query: {
         type: FilterType.SEARCH,
@@ -57,7 +55,7 @@ export default defineComponent({
       filters.value.categories.options = (await categoryService.readAll()).map((l) => l.name);
     };
 
-    return { title, description, filters };
+    return { filters };
   },
 });
 </script>

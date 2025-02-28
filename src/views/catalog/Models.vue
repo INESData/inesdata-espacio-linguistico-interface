@@ -1,5 +1,5 @@
 <template>
-  <Search :title="title" icon="$axisArrow" :description="description" :searchFilters="filters" />
+  <Search :title="$t('commons.model.model')" icon="$axisArrow" :description="$t('commons.model.model-description')" :searchFilters="filters" />
 </template>
 
 <script lang="ts">
@@ -18,8 +18,6 @@ export default defineComponent({
   setup() {
     const { t } = useI18n();
 
-    const title = t('commons.model.model');
-    const description = t('commons.model.model-description');
     const filters: Ref<SearchFilters> = ref({
       query: {
         type: FilterType.SEARCH,
@@ -52,7 +50,7 @@ export default defineComponent({
       filters.value.categories.options = (await categoryService.readAll()).map((l) => l.name);
     };
 
-    return { title, description, filters };
+    return { filters };
   },
 });
 </script>

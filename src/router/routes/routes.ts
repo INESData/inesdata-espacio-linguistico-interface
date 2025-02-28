@@ -34,7 +34,6 @@ export default [
           parent: 'corpus',
         },
       },
-      /*
       {
         path: 'services',
         name: 'services',
@@ -52,7 +51,6 @@ export default [
           parent: 'services',
         },
       },
-      */
       {
         path: 'models',
         name: 'models',
