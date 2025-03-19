@@ -47,7 +47,7 @@ router.beforeEach(async (to, from, next) => {
     if (!keycloak.authenticated) {
       const auth = await keycloak.init({
         onLoad: 'login-required' as KeycloakOnLoad,
-        scope: '',
+        scope: 'openid profile email',
         pkceMethod: 'S256',
         redirectUri: window.location.href,
       });
